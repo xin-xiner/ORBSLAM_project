@@ -1,0 +1,1 @@
+Release\kinect_slam.exe ../Vocabulary/ORBvoc.txt kinect.yaml

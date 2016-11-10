@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{06BD9A4D-9433-4C3B-B34C-58AC6A27AE13}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>kinect_slam</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="F:\Kinect.props" />
+    <Import Project="F:\programPlugs\openCV2.4.11\opencv2411d.props" />
+    <Import Project="F:\programPlugs\Eigen\Eigen.props" />
+    <Import Project="F:\programPlugs\OpenGL\OpenGL.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="F:\Kinect.props" />
+    <Import Project="F:\programPlugs\openCV2.4.11\opencv2411d.props" />
+    <Import Project="F:\programPlugs\Eigen\Eigen.props" />
+    <Import Project="F:\programPlugs\OpenGL\OpenGL.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="F:\programPlugs\Kinect.props" />
+    <Import Project="F:\programPlugs\openCV2.4.11\opencv2411.props" />
+    <Import Project="F:\programPlugs\Eigen\Eigen.props" />
+    <Import Project="F:\programPlugs\OpenGL\OpenGL.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="F:\programPlugs\Kinect.props" />
+    <Import Project="F:\programPlugs\openCV2.4.11\opencv2411.props" />
+    <Import Project="F:\programPlugs\Eigen\Eigen.props" />
+    <Import Project="F:\programPlugs\OpenGL\OpenGL.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalOptions>/VERBOSE /SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>F:\programPlugs\boost_1_60_0\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\build\Release\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411.lib;..\Thirdparty\Pangolin\build\src\Release\pangolin.lib;..\Thirdparty\Pangolin\build\external\glew\lib\glew.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;F:\programPlugs\Python 2.7\libs\python27.lib;..\Thirdparty\Pangolin\build\external\libpng\lib\libpng16_static.lib;..\Thirdparty\Pangolin\build\external\zlib\lib\zlibstatic.lib;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\Release\DBoW2.lib;..\Thirdparty\g2o\lib\g2o.lib;Kinect20.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalOptions>/VERBOSE /SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>F:\programPlugs\boost_1_60_0\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\build\Release\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411.lib;..\Thirdparty\Pangolin\build\src\Release\pangolin.lib;..\Thirdparty\Pangolin\build\external\glew\lib\glew.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;F:\programPlugs\Python 2.7\libs\python27.lib;..\Thirdparty\Pangolin\build\external\libpng\lib\libpng16_static.lib;..\Thirdparty\Pangolin\build\external\zlib\lib\zlibstatic.lib;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\Release\DBoW2.lib;..\Thirdparty\g2o\lib\g2o.lib;Kinect20.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="FrameReader.h" />
+    <ClInclude Include="frameWriter.h" />
+    <ClInclude Include="KinectReader.h" />
+    <ClInclude Include="PointCloud.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="F:\programPlugs\OpenGL\GltZpr\zpr.c" />
+    <ClCompile Include="KinectReader.cpp" />
+    <ClCompile Include="Kinect_SLAM.cpp" />
+    <ClCompile Include="ModelGenerator.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

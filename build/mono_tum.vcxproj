@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{184A23DA-6C21-48E9-AA0C-5B7A068C6019}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>mono_tum</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\ORB_SLAM2-master\Examples\Monocular\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mono_tum.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mono_tum</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mono_tum</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.exe</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\ORB_SLAM2-master\Examples\Monocular\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mono_tum.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mono_tum</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">mono_tum</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.exe</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:\ORB_SLAM2-master\Examples\Monocular\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">mono_tum.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">mono_tum</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">mono_tum</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.exe</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:\ORB_SLAM2-master\Examples\Monocular\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">mono_tum.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">mono_tum</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">mono_tum</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.exe</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;COMPILEDWITHC11;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;COMPILEDWITHC11;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;Debug\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411d.lib;..\Thirdparty\Pangolin\build\src\Debug\pangolin.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-gd-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-gd-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-gd-1_60.lib;glu32.lib;opengl32.lib;..\Thirdparty\Pangolin\build\external\glew\lib\glewd.lib;F:\programPlugs\Python 2.7\libs\python27.lib;..\Thirdparty\Pangolin\build\external\libpng\lib\libpng16_staticd.lib;..\Thirdparty\Pangolin\build\external\zlib\lib\zlibstaticd.lib;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\libDBoW2.so;..\Thirdparty\g2o\lib\libg2o.so</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/ORB_SLAM2-master/build/Debug/mono_tum.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/ORB_SLAM2-master/Examples/Monocular/Debug/mono_tum.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;COMPILEDWITHC11;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;COMPILEDWITHC11;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;Debug\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411d.lib;..\Thirdparty\Pangolin\build\src\Debug\pangolin.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-gd-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-gd-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-gd-1_60.lib;glu32.lib;opengl32.lib;..\Thirdparty\Pangolin\build\external\glew\lib\glewd.lib;F:\programPlugs\Python 2.7\libs\python27.lib;..\Thirdparty\Pangolin\build\external\libpng\lib\libpng16_staticd.lib;..\Thirdparty\Pangolin\build\external\zlib\lib\zlibstaticd.lib;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\libDBoW2.so;..\Thirdparty\g2o\lib\libg2o.so</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/ORB_SLAM2-master/build/Debug/mono_tum.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/ORB_SLAM2-master/Examples/Monocular/Debug/mono_tum.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <StructMemberAlignment>16Bytes</StructMemberAlignment>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;Release\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411.lib;..\Thirdparty\Pangolin\build\src\Release\pangolin.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;glu32.lib;opengl32.lib;..\Thirdparty\Pangolin\build\external\glew\lib\glew.lib;F:\programPlugs\Python 2.7\libs\python27.lib;..\Thirdparty\Pangolin\build\external\libpng\lib\libpng16_static.lib;..\Thirdparty\Pangolin\build\external\zlib\lib\zlibstatic.lib;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\Release\DBoW2.lib;..\Thirdparty\g2o\lib\g2o.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\programPlugs\boost_1_60_0\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/ORB_SLAM2-master/build/Release/mono_tum.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/ORB_SLAM2-master/Examples/Monocular/Release/mono_tum.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <StructMemberAlignment>16Bytes</StructMemberAlignment>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;Release\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411.lib;..\Thirdparty\Pangolin\build\src\Release\pangolin.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;glu32.lib;opengl32.lib;..\Thirdparty\Pangolin\build\external\glew\lib\glew.lib;F:\programPlugs\Python 2.7\libs\python27.lib;..\Thirdparty\Pangolin\build\external\libpng\lib\libpng16_static.lib;..\Thirdparty\Pangolin\build\external\zlib\lib\zlibstatic.lib;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\Release\DBoW2.lib;..\Thirdparty\g2o\lib\g2o.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\programPlugs\boost_1_60_0\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/ORB_SLAM2-master/build/Release/mono_tum.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/ORB_SLAM2-master/Examples/Monocular/Release/mono_tum.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;MinSizeRel\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411d.lib;..\Thirdparty\Pangolin\build\src\MinSizeRel\pangolin.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;glu32.lib;opengl32.lib;_glew-NOTFOUND;F:\programPlugs\Python 2.7\libs\python27.lib;_libpng-NOTFOUND;_zlib-NOTFOUND;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\libDBoW2.so;..\Thirdparty\g2o\lib\libg2o.so</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/ORB_SLAM2-master/build/MinSizeRel/mono_tum.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/ORB_SLAM2-master/Examples/Monocular/MinSizeRel/mono_tum.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;MinSizeRel\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411d.lib;..\Thirdparty\Pangolin\build\src\MinSizeRel\pangolin.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;glu32.lib;opengl32.lib;_glew-NOTFOUND;F:\programPlugs\Python 2.7\libs\python27.lib;_libpng-NOTFOUND;_zlib-NOTFOUND;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\libDBoW2.so;..\Thirdparty\g2o\lib\libg2o.so</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/ORB_SLAM2-master/build/MinSizeRel/mono_tum.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/ORB_SLAM2-master/Examples/Monocular/MinSizeRel/mono_tum.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;RelWithDebInfo\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411d.lib;..\Thirdparty\Pangolin\build\src\RelWithDebInfo\pangolin.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;glu32.lib;opengl32.lib;_glew-NOTFOUND;F:\programPlugs\Python 2.7\libs\python27.lib;_libpng-NOTFOUND;_zlib-NOTFOUND;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\libDBoW2.so;..\Thirdparty\g2o\lib\libg2o.so</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/ORB_SLAM2-master/build/RelWithDebInfo/mono_tum.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/ORB_SLAM2-master/Examples/Monocular/RelWithDebInfo/mono_tum.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;RelWithDebInfo\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411d.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411d.lib;..\Thirdparty\Pangolin\build\src\RelWithDebInfo\pangolin.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;glu32.lib;opengl32.lib;_glew-NOTFOUND;F:\programPlugs\Python 2.7\libs\python27.lib;_libpng-NOTFOUND;_zlib-NOTFOUND;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\libDBoW2.so;..\Thirdparty\g2o\lib\libg2o.so</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/ORB_SLAM2-master/build/RelWithDebInfo/mono_tum.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/ORB_SLAM2-master/Examples/Monocular/RelWithDebInfo/mono_tum.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\ORB_SLAM2-master\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule E:/ORB_SLAM2-master/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule E:/ORB_SLAM2-master/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+F:\programPlugs\CMake\bin\cmake.exe -HE:/ORB_SLAM2-master -BE:/ORB_SLAM2-master/build --check-stamp-file E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+F:\programPlugs\CMake\bin\cmake.exe -HE:/ORB_SLAM2-master -BE:/ORB_SLAM2-master/build --check-stamp-file E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/ORB_SLAM2-master/CMakeLists.txt;E:\ORB_SLAM2-master\CMakeLists.txt;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInitialize.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCCompiler.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCXXCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeGenericSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\WindowsPaths.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-C.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeRCCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeRCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCXXInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-CXX.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXCompilerFlag.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXSourceCompiles.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig-version.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-debug.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-release.cmake;E:\ORB_SLAM2-master\cmake_modules\FindEigen3.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfigVersion.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfig.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinTargets.cmake;E:\ORB_SLAM2-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:/ORB_SLAM2-master/CMakeLists.txt;E:\ORB_SLAM2-master\CMakeLists.txt;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInitialize.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCCompiler.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCXXCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeGenericSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\WindowsPaths.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-C.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeRCCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeRCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCXXInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-CXX.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXCompilerFlag.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXSourceCompiles.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig-version.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-debug.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-release.cmake;E:\ORB_SLAM2-master\cmake_modules\FindEigen3.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfigVersion.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfig.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinTargets.cmake;E:\ORB_SLAM2-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule E:/ORB_SLAM2-master/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule E:/ORB_SLAM2-master/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+F:\programPlugs\CMake\bin\cmake.exe -HE:/ORB_SLAM2-master -BE:/ORB_SLAM2-master/build --check-stamp-file E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+F:\programPlugs\CMake\bin\cmake.exe -HE:/ORB_SLAM2-master -BE:/ORB_SLAM2-master/build --check-stamp-file E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/ORB_SLAM2-master/CMakeLists.txt;E:\ORB_SLAM2-master\CMakeLists.txt;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInitialize.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCCompiler.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCXXCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeGenericSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\WindowsPaths.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-C.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeRCCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeRCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCXXInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-CXX.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXCompilerFlag.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXSourceCompiles.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig-version.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-debug.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-release.cmake;E:\ORB_SLAM2-master\cmake_modules\FindEigen3.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfigVersion.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfig.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinTargets.cmake;E:\ORB_SLAM2-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:/ORB_SLAM2-master/CMakeLists.txt;E:\ORB_SLAM2-master\CMakeLists.txt;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInitialize.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCCompiler.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCXXCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeGenericSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\WindowsPaths.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-C.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeRCCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeRCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCXXInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-CXX.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXCompilerFlag.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXSourceCompiles.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig-version.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-debug.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-release.cmake;E:\ORB_SLAM2-master\cmake_modules\FindEigen3.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfigVersion.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfig.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinTargets.cmake;E:\ORB_SLAM2-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule E:/ORB_SLAM2-master/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule E:/ORB_SLAM2-master/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+F:\programPlugs\CMake\bin\cmake.exe -HE:/ORB_SLAM2-master -BE:/ORB_SLAM2-master/build --check-stamp-file E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+F:\programPlugs\CMake\bin\cmake.exe -HE:/ORB_SLAM2-master -BE:/ORB_SLAM2-master/build --check-stamp-file E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:/ORB_SLAM2-master/CMakeLists.txt;E:\ORB_SLAM2-master\CMakeLists.txt;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInitialize.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCCompiler.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCXXCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeGenericSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\WindowsPaths.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-C.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeRCCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeRCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCXXInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-CXX.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXCompilerFlag.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXSourceCompiles.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig-version.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-debug.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-release.cmake;E:\ORB_SLAM2-master\cmake_modules\FindEigen3.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfigVersion.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfig.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinTargets.cmake;E:\ORB_SLAM2-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:/ORB_SLAM2-master/CMakeLists.txt;E:\ORB_SLAM2-master\CMakeLists.txt;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInitialize.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCCompiler.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCXXCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeGenericSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\WindowsPaths.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-C.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeRCCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeRCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCXXInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-CXX.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXCompilerFlag.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXSourceCompiles.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig-version.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-debug.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-release.cmake;E:\ORB_SLAM2-master\cmake_modules\FindEigen3.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfigVersion.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfig.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinTargets.cmake;E:\ORB_SLAM2-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule E:/ORB_SLAM2-master/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule E:/ORB_SLAM2-master/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+F:\programPlugs\CMake\bin\cmake.exe -HE:/ORB_SLAM2-master -BE:/ORB_SLAM2-master/build --check-stamp-file E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+F:\programPlugs\CMake\bin\cmake.exe -HE:/ORB_SLAM2-master -BE:/ORB_SLAM2-master/build --check-stamp-file E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:/ORB_SLAM2-master/CMakeLists.txt;E:\ORB_SLAM2-master\CMakeLists.txt;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInitialize.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCCompiler.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCXXCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeGenericSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\WindowsPaths.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-C.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeRCCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeRCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCXXInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-CXX.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXCompilerFlag.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXSourceCompiles.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig-version.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-debug.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-release.cmake;E:\ORB_SLAM2-master\cmake_modules\FindEigen3.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfigVersion.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfig.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinTargets.cmake;E:\ORB_SLAM2-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:/ORB_SLAM2-master/CMakeLists.txt;E:\ORB_SLAM2-master\CMakeLists.txt;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInitialize.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCCompiler.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeCXXCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeSystemSpecificInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeGenericSystem.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\WindowsPaths.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-C.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;E:\ORB_SLAM2-master\build\CMakeFiles\3.1.3\CMakeRCCompiler.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeRCInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCXXInformation.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC-CXX.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\Platform\Windows-MSVC.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCommonLanguageInclude.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXCompilerFlag.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CheckCXXSourceCompiles.cmake;F:\programPlugs\CMake\share\cmake-3.1\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig-version.cmake;F:\programPlugs\openCV2.4.11\opencv\build\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVConfig.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-debug.cmake;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\OpenCVModules-release.cmake;E:\ORB_SLAM2-master\cmake_modules\FindEigen3.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfigVersion.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinConfig.cmake;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\PangolinTargets.cmake;E:\ORB_SLAM2-master\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\ORB_SLAM2-master\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="E:\ORB_SLAM2-master\Examples\Monocular\mono_tum.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="E:/ORB_SLAM2-master/build/ORB_SLAM2.vcxproj">
+      <Project>B0CC9B89-3C54-4AED-A604-BF5A1DEE2D56</Project>
+    </ProjectReference>
+    <ProjectReference Include="E:/ORB_SLAM2-master/build/ZERO_CHECK.vcxproj">
+      <Project>9549D833-8EA1-47E1-A39F-D05099C163BF</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
