@@ -51,8 +51,8 @@ cv::Mat FrameDrawer::DrawFrame()
         if(mState==Tracking::SYSTEM_NOT_READY)
             mState=Tracking::NO_IMAGES_YET;
 
-		im = cv::Mat::zeros(mIm.size(),mIm.type());
-        //mIm.copyTo(im);
+		//im = cv::Mat::zeros(mIm.size(),mIm.type());
+        mIm.copyTo(im);
 
         if(mState==Tracking::NOT_INITIALIZED)
         {
