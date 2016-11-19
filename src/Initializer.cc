@@ -110,12 +110,14 @@ bool Initializer::Initialize(const Frame &CurrentFrame, const vector<int> &vMatc
 
     // Compute ratio of scores
     float RH = SH/(SH+SF);
-
+	//std::cout << "SH:" << SH << std::endl;
+	//std::cout << "SF:" << SF << std::endl;
+	//std::cout << "RH:" << RH << std::endl;
     // Try to reconstruct from homography or fundamental depending on the ratio (0.40-0.45)
-    if(RH>0.40)
-        return ReconstructH(vbMatchesInliersH,H,mK,R21,t21,vP3D,vbTriangulated,1.0,50);
-    else //if(pF_HF>0.6)
-        return ReconstructF(vbMatchesInliersF,F,mK,R21,t21,vP3D,vbTriangulated,1.0,50);
+    //if(RH>0.40)
+    //return ReconstructH(vbMatchesInliersH,H,mK,R21,t21,vP3D,vbTriangulated,1.0,50);
+    //else //if(pF_HF>0.6)
+    return ReconstructF(vbMatchesInliersF,F,mK,R21,t21,vP3D,vbTriangulated,0.15,50);
 
     return false;
 }
@@ -514,12 +516,16 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
         nsimilar++;
 
     // If there is not a clear winner or not enough triangulated points reject initialization
-    if(maxGood<nMinGood || nsimilar>1)
-    {
-        return false;
-    }
+	std::cout << "nsimilar " << nsimilar << " maxGood " << maxGood << " nMinGood " << nMinGood << std::endl;
+	//if(maxGood<nMinGood || nsimilar>1)
+ //   {
+	//	std::cout << "maxGood<nMinGood || nsimilar>1  return false to reconstruct F" << std::endl;
+ //       return false;
+ //   }
 
     // If best reconstruction has enough parallax initialize
+	std::cout << "nGood: " << nGood1 << " " << nGood2 << " " << nGood3 << " " << nGood4 << std::endl;
+	std::cout << "parallaxs: " << parallax1 << " " << parallax2 << " " << parallax3 << " " << parallax4 << std::endl;
     if(maxGood==nGood1)
     {
         if(parallax1>minParallax)
@@ -565,7 +571,7 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
             return true;
         }
     }
-
+	std::cout << "other wise to  return false to reconstruct F" << std::endl;
     return false;
 }
 
@@ -717,7 +723,9 @@ bool Initializer::ReconstructH(vector<bool> &vbMatchesInliers, cv::Mat &H21, cv:
         }
     }
 
-
+	std::cout << "secondBestGood " << secondBestGood << std::endl
+		<< "bestParallax " << bestParallax << " minParallax " << minParallax << std::endl
+		<< "bestGood " << bestGood << " minTriangulated " << minTriangulated << " N " << N << std::endl;
     if(secondBestGood<0.75*bestGood && bestParallax>=minParallax && bestGood>minTriangulated && bestGood>0.9*N)
     {
         vR[bestSolutionIdx].copyTo(R21);
@@ -727,7 +735,7 @@ bool Initializer::ReconstructH(vector<bool> &vbMatchesInliers, cv::Mat &H21, cv:
 
         return true;
     }
-
+	std::cout << " reconstruct Homography false return" << std::endl;
     return false;
 }
 

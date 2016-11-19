@@ -562,7 +562,7 @@ void Tracking::StereoInitialization()
 
 void Tracking::MonocularInitialization()
 {
-
+	std::cout << "mCurrentFrame.mvKeys.size() " << mCurrentFrame.mvKeys.size() << std::endl;
     if(!mpInitializer)
     {
         // Set Reference Frame
@@ -580,18 +580,20 @@ void Tracking::MonocularInitialization()
             mpInitializer =  new Initializer(mCurrentFrame,1.0,200);
 
             fill(mvIniMatches.begin(),mvIniMatches.end(),-1);
-
+			std::cout<<"mCurrentFrame.mvKeys.size()>15  --- " << "mpInitializer initialize" << std::endl;
             return;
         }
     }
     else
     {
         // Try to initialize
+		
         if((int)mCurrentFrame.mvKeys.size()<=15)//wx-parameter-adjust original is 100
         {
             delete mpInitializer;
             mpInitializer = static_cast<Initializer*>(NULL);
             fill(mvIniMatches.begin(),mvIniMatches.end(),-1);
+			std::cout << "mCurrentFrame.mvKeys.size()<=15 return  ---  mpInitializer deleted" << std::endl;
             return;
         }
 
@@ -600,10 +602,12 @@ void Tracking::MonocularInitialization()
         int nmatches = matcher.SearchForInitialization(mInitialFrame,mCurrentFrame,mvbPrevMatched,mvIniMatches,100);
 
         // Check if there are enough correspondences
-        if(nmatches<15)
+		std::cout << "nmatches " << nmatches << std::endl;
+        if(nmatches<9)
         {
             delete mpInitializer;
             mpInitializer = static_cast<Initializer*>(NULL);
+			std::cout << "nmatches<9 return --- mpInitializer deleted" << std::endl;
             return;
         }
 
@@ -689,7 +693,7 @@ void Tracking::CreateInitialMapMonocular()
     float medianDepth = pKFini->ComputeSceneMedianDepth(2);
     float invMedianDepth = 1.0f/medianDepth;
 
-    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<15)
+    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<9)
     {
         cout << "Wrong initialization, reseting..." << endl;
         Reset();
