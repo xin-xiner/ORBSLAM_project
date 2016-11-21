@@ -403,7 +403,7 @@ void Tracking::Track()
         else
         {
             // mbVO true means that there are few matches to MapPoints in the map. We cannot retrieve
-            // a local map and therefore we do not perform TrackLocalMap(). Once the system relocalizes
+            // a local map and therfore we do not perform TrackLocalMap(). Once the system relocalizes
             // the camera we will use the local map again.
             if(bOK && !mbVO)
                 bOK = TrackLocalMap();
@@ -566,7 +566,7 @@ void Tracking::MonocularInitialization()
     if(!mpInitializer)
     {
         // Set Reference Frame
-        if(mCurrentFrame.mvKeys.size()>15)//wx-parameter-adjust original is 100
+        if(mCurrentFrame.mvKeys.size()>100)//wx-parameter-adjust original is 100
         {
             mInitialFrame = Frame(mCurrentFrame);
             mLastFrame = Frame(mCurrentFrame);
@@ -588,7 +588,7 @@ void Tracking::MonocularInitialization()
     {
         // Try to initialize
 		
-        if((int)mCurrentFrame.mvKeys.size()<=15)//wx-parameter-adjust original is 100
+        if((int)mCurrentFrame.mvKeys.size()<=100)//wx-parameter-adjust original is 100
         {
             delete mpInitializer;
             mpInitializer = static_cast<Initializer*>(NULL);
@@ -603,7 +603,7 @@ void Tracking::MonocularInitialization()
 
         // Check if there are enough correspondences
 		std::cout << "nmatches " << nmatches << std::endl;
-        if(nmatches<9)
+        if(nmatches<100)
         {
             delete mpInitializer;
             mpInitializer = static_cast<Initializer*>(NULL);
@@ -692,8 +692,9 @@ void Tracking::CreateInitialMapMonocular()
     // Set median depth to 1
     float medianDepth = pKFini->ComputeSceneMedianDepth(2);
     float invMedianDepth = 1.0f/medianDepth;
-
-    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<9)
+	std::cout << "medianDepth  " << medianDepth << std::endl;
+	std::cout << "pKFcur->TrackedMapPoints(1)  " << pKFcur->TrackedMapPoints(1) << std::endl;
+    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<6)
     {
         cout << "Wrong initialization, reseting..." << endl;
         Reset();

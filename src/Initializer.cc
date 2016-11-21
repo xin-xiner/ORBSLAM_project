@@ -117,7 +117,7 @@ bool Initializer::Initialize(const Frame &CurrentFrame, const vector<int> &vMatc
     //if(RH>0.40)
     //return ReconstructH(vbMatchesInliersH,H,mK,R21,t21,vP3D,vbTriangulated,1.0,50);
     //else //if(pF_HF>0.6)
-    return ReconstructF(vbMatchesInliersF,F,mK,R21,t21,vP3D,vbTriangulated,0.15,50);
+    return ReconstructF(vbMatchesInliersF,F,mK,R21,t21,vP3D,vbTriangulated,0.15,15);
 
     return false;
 }
@@ -484,7 +484,7 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
 
     // Recover the 4 motion hypotheses
     DecomposeE(E21,R1,R2,t);  
-
+	if (t.at<float>(2) > 0)t = -t;
     cv::Mat t1=t;
     cv::Mat t2=-t;
 
@@ -495,15 +495,15 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
 
     int nGood1 = CheckRT(R1,t1,mvKeys1,mvKeys2,mvMatches12,vbMatchesInliers,K, vP3D1, 4.0*mSigma2, vbTriangulated1, parallax1);
     int nGood2 = CheckRT(R2,t1,mvKeys1,mvKeys2,mvMatches12,vbMatchesInliers,K, vP3D2, 4.0*mSigma2, vbTriangulated2, parallax2);
-    int nGood3 = CheckRT(R1,t2,mvKeys1,mvKeys2,mvMatches12,vbMatchesInliers,K, vP3D3, 4.0*mSigma2, vbTriangulated3, parallax3);
-    int nGood4 = CheckRT(R2,t2,mvKeys1,mvKeys2,mvMatches12,vbMatchesInliers,K, vP3D4, 4.0*mSigma2, vbTriangulated4, parallax4);
+	int nGood3 = 0;//CheckRT(R1,t2,mvKeys1,mvKeys2,mvMatches12,vbMatchesInliers,K, vP3D3, 4.0*mSigma2, vbTriangulated3, parallax3);
+	int nGood4 = 0;//CheckRT(R2,t2,mvKeys1,mvKeys2,mvMatches12,vbMatchesInliers,K, vP3D4, 4.0*mSigma2, vbTriangulated4, parallax4);
 
     int maxGood = max(nGood1,max(nGood2,max(nGood3,nGood4)));
 
     R21 = cv::Mat();
     t21 = cv::Mat();
 
-    int nMinGood = max(static_cast<int>(0.9*N),minTriangulated);
+    int nMinGood = max(static_cast<int>(0.1*N),minTriangulated);
 
     int nsimilar = 0;
     if(nGood1>0.7*maxGood)
@@ -517,11 +517,11 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
 
     // If there is not a clear winner or not enough triangulated points reject initialization
 	std::cout << "nsimilar " << nsimilar << " maxGood " << maxGood << " nMinGood " << nMinGood << std::endl;
-	//if(maxGood<nMinGood || nsimilar>1)
- //   {
-	//	std::cout << "maxGood<nMinGood || nsimilar>1  return false to reconstruct F" << std::endl;
- //       return false;
- //   }
+	if(maxGood<nMinGood || nsimilar>1)
+    {
+		std::cout << "maxGood<nMinGood || nsimilar>1  return false to reconstruct F" << std::endl;
+        return false;
+    }
 
     // If best reconstruction has enough parallax initialize
 	std::cout << "nGood: " << nGood1 << " " << nGood2 << " " << nGood3 << " " << nGood4 << std::endl;
@@ -895,10 +895,14 @@ int Initializer::CheckRT(const cv::Mat &R, const cv::Mat &t, const vector<cv::Ke
 
         vCosParallax.push_back(cosParallax);
         vP3D[vMatches12[i].first] = cv::Point3f(p3dC1.at<float>(0),p3dC1.at<float>(1),p3dC1.at<float>(2));
-        nGood++;
+        
 
-        if(cosParallax<0.99998)
-            vbGood[vMatches12[i].first]=true;
+		if (cosParallax < 0.99999&&p3dC2.at<float>(2) > 0)
+		{
+			vbGood[vMatches12[i].first] = true;
+			nGood++;
+		}
+            
     }
 
     if(nGood>0)
