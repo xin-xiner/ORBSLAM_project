@@ -397,8 +397,8 @@ void Tracking::Track()
         // If we have an initial estimation of the camera pose and matching. Track the local map.
         if(!mbOnlyTracking)
         {
-            if(bOK)
-                bOK = TrackLocalMap();
+            //if(bOK)
+                bOK |= TrackLocalMap();
         }
         else
         {
