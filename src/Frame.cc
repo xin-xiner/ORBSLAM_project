@@ -272,7 +272,9 @@ bool Frame::isInFrustum(MapPoint *pMP, float viewingCosLimit)
 
     // 3D in absolute coordinates
     cv::Mat P = pMP->GetWorldPos(); 
-
+	/*std::cout<<"P"<<std::endl << P << std::endl;
+	std::cout << "mRcw" << std::endl << mRcw << std::endl;
+	std::cout << "mtcw" << std::endl << mtcw << std::endl;*/
     // 3D in camera coordinates
     const cv::Mat Pc = mRcw*P+mtcw;
     const float &PcX = Pc.at<float>(0);

@@ -770,8 +770,9 @@ bool Tracking::TrackReferenceKeyFrame()
     vector<MapPoint*> vpMapPointMatches;
 
     int nmatches = matcher.SearchByBoW(mpReferenceKF,mCurrentFrame,vpMapPointMatches);
+	mCurrentFrame.SetPose(mLastFrame.mTcw);
 
-    if(nmatches<15)
+    if(nmatches<9)//wx-2016-12-09 original value is 15
         return false;
 
     mCurrentFrame.mvpMapPoints = vpMapPointMatches;
