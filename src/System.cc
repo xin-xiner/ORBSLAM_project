@@ -24,6 +24,7 @@
 #include "Converter.h"
 #include <thread>
 #include <pangolin/pangolin.h>
+#include <iomanip>
 #define usleep(x)  Sleep((float)x/1000.0f)
 namespace ORB_SLAM2
 {
@@ -61,13 +62,24 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     cout << endl << "Loading ORB Vocabulary. This could take a while..." << endl;
 
     mpVocabulary = new ORBVocabulary();
-    bool bVocLoad = mpVocabulary->loadFromTextFile(strVocFile);
+    //try to load from the binary file
+    bool bVocLoad = mpVocabulary->loadFromBinFile(strVocFile+".bin");
     if(!bVocLoad)
     {
-        cerr << "Wrong path to vocabulary. " << endl;
-        cerr << "Falied to open at: " << strVocFile << endl;
-        exit(-1);
+        cerr << "Cannot find binary file for vocabulary. " << endl;
+        cerr << "Falied to open at: " << strVocFile+".bin" << endl;
+        cerr << "Trying to open the text file. " << endl;
+        bool bVocLoad2 = mpVocabulary->loadFromTextFile(strVocFile);
+        if(!bVocLoad2)
+        {
+            cerr << "Wrong path to vocabulary. " << endl;
+            cerr << "Falied to open at: " << strVocFile << endl;
+            exit(-1);
+        }
+        cerr << "Saving the vocabulary to binary for the next time to " << strVocFile+".bin" << endl;
+        mpVocabulary->saveToBinFile(strVocFile+".bin");
     }
+
     cout << "Vocabulary loaded!" << endl << endl;
 
     //Create KeyFrame Database
@@ -407,7 +419,7 @@ void System::SaveTrajectoryKITTI(const string &filename)
             Trw = Trw*pKF->mTcp;
             pKF = pKF->GetParent();
         }
-
+		
         Trw = Trw*pKF->GetPose()*Two;
 
         cv::Mat Tcw = (*lit)*Trw;
