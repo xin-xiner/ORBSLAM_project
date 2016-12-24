@@ -140,7 +140,7 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
     if(sensor==System::RGBD)
     {
         mDepthMapFactor = fSettings["DepthMapFactor"];
-        if(mDepthMapFactor==0)
+        if(fabs(mDepthMapFactor)<1e-5)
             mDepthMapFactor=1;
         else
             mDepthMapFactor = 1.0f/mDepthMapFactor;
@@ -224,8 +224,8 @@ cv::Mat Tracking::GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const d
             cvtColor(mImGray,mImGray,CV_BGRA2GRAY);
     }
 
-    if(mDepthMapFactor!=1 || imDepth.type()!=CV_32F);
-    imDepth.convertTo(imDepth,CV_32F,mDepthMapFactor);
+    if((fabs(mDepthMapFactor-1.0f)>1e-5) || imDepth.type()!=CV_32F)
+        imDepth.convertTo(imDepth,CV_32F,mDepthMapFactor);
 
     mCurrentFrame = Frame(mImGray,imDepth,timestamp,mpORBextractorLeft,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth);
 
@@ -397,8 +397,10 @@ void Tracking::Track()
         // If we have an initial estimation of the camera pose and matching. Track the local map.
         if(!mbOnlyTracking)
         {
-            //if(bOK)
-                bOK |= TrackLocalMap();
+			std::cout << "tracking statue reference frame: " << bOK << std::endl;
+            if(bOK)
+                bOK = TrackLocalMap();
+			std::cout << "tracking statue local map: " << bOK << std::endl;
         }
         else
         {
@@ -566,7 +568,7 @@ void Tracking::MonocularInitialization()
     if(!mpInitializer)
     {
         // Set Reference Frame
-        if(mCurrentFrame.mvKeys.size()>100)//wx-parameter-adjust original is 100
+        if(mCurrentFrame.mvKeys.size()>100)
         {
             mInitialFrame = Frame(mCurrentFrame);
             mLastFrame = Frame(mCurrentFrame);
@@ -588,7 +590,7 @@ void Tracking::MonocularInitialization()
     {
         // Try to initialize
 		
-        if((int)mCurrentFrame.mvKeys.size()<=100)//wx-parameter-adjust original is 100
+        if((int)mCurrentFrame.mvKeys.size()<=100)
         {
             delete mpInitializer;
             mpInitializer = static_cast<Initializer*>(NULL);
@@ -694,7 +696,7 @@ void Tracking::CreateInitialMapMonocular()
     float invMedianDepth = 1.0f/medianDepth;
 	std::cout << "medianDepth  " << medianDepth << std::endl;
 	std::cout << "pKFcur->TrackedMapPoints(1)  " << pKFcur->TrackedMapPoints(1) << std::endl;
-    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<6)
+    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<6)//wx-adjust-parameter original value is 100
     {
         cout << "Wrong initialization, reseting..." << endl;
         Reset();
@@ -770,9 +772,10 @@ bool Tracking::TrackReferenceKeyFrame()
     vector<MapPoint*> vpMapPointMatches;
 
     int nmatches = matcher.SearchByBoW(mpReferenceKF,mCurrentFrame,vpMapPointMatches);
-	mCurrentFrame.SetPose(mLastFrame.mTcw);
+	std::cout << "TrackReferenceKeyFrame SearchByBoW nmatches: " << nmatches << std::endl;
+	//mCurrentFrame.SetPose(mLastFrame.mTcw);//edit-by-wx 2016-12-09 If tracking on reference frame is lost, we still want to try to track on local map. Then the pose must be set.
 
-    if(nmatches<9)//wx-2016-12-09 original value is 15
+    if(nmatches<15)//wx-2016-12-09 original value is 15
         return false;
 
     mCurrentFrame.mvpMapPoints = vpMapPointMatches;
@@ -800,7 +803,7 @@ bool Tracking::TrackReferenceKeyFrame()
                 nmatchesMap++;
         }
     }
-
+	std::cout << "TrackReferenceKeyFrame after optimization" << nmatchesMap << std::endl;
     return nmatchesMap>=10;
 }
 
@@ -812,7 +815,7 @@ void Tracking::UpdateLastFrame()
 
     mLastFrame.SetPose(Tlr*pRef->GetPose());
 
-    if(mnLastKeyFrameId==mLastFrame.mnId || mSensor==System::MONOCULAR)
+    if(mnLastKeyFrameId==mLastFrame.mnId || mSensor==System::MONOCULAR || !mbOnlyTracking)
         return;
 
     // Create "visual odometry" MapPoints
@@ -943,7 +946,7 @@ bool Tracking::TrackLocalMap()
     SearchLocalPoints();
 
     // Optimize Pose
-    Optimizer::PoseOptimization(&mCurrentFrame);
+	std::cout << "result " << Optimizer::PoseOptimization(&mCurrentFrame) << std::endl;
     mnMatchesInliers = 0;
 
     // Update MapPoints Statistics
@@ -1531,10 +1534,9 @@ void Tracking::Reset()
     // Reset Local Mapping
     cout << "Reseting Local Mapper...";
     mpLocalMapper->RequestReset();
-    cout << " done" << endl;
-
+	cout << " done" << endl;
     // Reset Loop Closing
-    cout << "Reseting Loop Closing...";
+	cout << "Reseting Loop Closing...";
     mpLoopClosing->RequestReset();
     cout << " done" << endl;
 
@@ -1560,7 +1562,9 @@ void Tracking::Reset()
     mlpReferences.clear();
     mlFrameTimes.clear();
     mlbLost.clear();
-
+	cout << "clear done" << endl;
+	std::cout << "waiting reset" << std::endl;
+	usleep(5000);
     mpViewer->Release();
 }
 

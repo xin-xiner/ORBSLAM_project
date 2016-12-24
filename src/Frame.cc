@@ -80,10 +80,10 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeSt
     threadLeft.join();
     threadRight.join();
 
+    N = mvKeys.size();
+
     if(mvKeys.empty())
         return;
-
-    N = mvKeys.size();
 
     UndistortKeyPoints();
 

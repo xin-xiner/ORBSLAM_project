@@ -24,6 +24,7 @@ int main(int argc, char **argv)
 	
 	cv::VideoCapture video(video_path);
 	int nImages = video.get(CV_CAP_PROP_FRAME_COUNT);
+	double fps = video.get(CV_CAP_PROP_FPS);
 	// Create SLAM system. It initializes all system threads and gets ready to process frames.
 	ORB_SLAM2::System SLAM(argv[1], argv[2], ORB_SLAM2::System::MONOCULAR, true);
 
@@ -68,7 +69,7 @@ int main(int argc, char **argv)
 		double ttrack = std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
 
 		vTimesTrack[ni] = ttrack;
-		vTimeCount++;
+		vTimeCount += 1.0f / fps;
 		// Wait to load the next frame
 	
 	}
