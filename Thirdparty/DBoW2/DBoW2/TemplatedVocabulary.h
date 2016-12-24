@@ -1471,7 +1471,7 @@ template<class TDescriptor, class F>
 bool TemplatedVocabulary<TDescriptor,F>::loadFromBinFile(const std::string &filename)
 {
     ifstream f;
-    f.open(filename.c_str());
+    f.open(filename.c_str(), ios::binary);
 
     if(f.eof())
         return false;
@@ -1544,7 +1544,7 @@ template<class TDescriptor, class F>
 void TemplatedVocabulary<TDescriptor,F>::saveToBinFile(const std::string &filename) const
 {
     fstream f;
-    f.open(filename.c_str(),ios_base::out);
+    f.open(filename.c_str(),ios_base::out|ios::binary);
     f.write((const char*)&m_k,sizeof(m_k));
     f.write((const char*)&m_L,sizeof(m_L));
     f.write((const char*)&m_scoring,sizeof(m_scoring));
