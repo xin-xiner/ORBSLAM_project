@@ -45,7 +45,7 @@ namespace ORB_SLAM2
 
 Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer, MapDrawer *pMapDrawer, Map *pMap, KeyFrameDatabase* pKFDB, const string &strSettingPath, const int sensor):
     mState(NO_IMAGES_YET), mSensor(sensor), mbOnlyTracking(false), mbVO(false), mpORBVocabulary(pVoc),
-    mpKeyFrameDB(pKFDB), mpInitializer(static_cast<Initializer*>(NULL)), mpSystem(pSys),
+    mpKeyFrameDB(pKFDB), mpInitializer(static_cast<Initializer*>(NULL)), mpSystem(pSys), mpViewer(NULL),
     mpFrameDrawer(pFrameDrawer), mpMapDrawer(pMapDrawer), mpMap(pMap), mnLastRelocFrameId(0)
 {
     // Load camera parameters from settings file
@@ -1007,33 +1007,24 @@ bool Tracking::NeedNewKeyFrame()
     // Local Mapping accept keyframes?
     bool bLocalMappingIdle = mpLocalMapper->AcceptKeyFrames();
 
-    // Stereo & RGB-D: Ratio of close "matches to map"/"total matches"
-    // "total matches = matches to map + visual odometry matches"
-    // Visual odometry matches will become MapPoints if we insert a keyframe.
-    // This ratio measures how many MapPoints we could create if we insert a keyframe.
-    int nMap = 0;
-    int nTotal= 0;
+    // Check how many "close" points are being tracked and how many could be potentially created.
+    int nNonTrackedClose = 0;
+    int nTrackedClose= 0;
     if(mSensor!=System::MONOCULAR)
     {
         for(int i =0; i<mCurrentFrame.N; i++)
         {
             if(mCurrentFrame.mvDepth[i]>0 && mCurrentFrame.mvDepth[i]<mThDepth)
             {
-                nTotal++;
-                if(mCurrentFrame.mvpMapPoints[i])
-                    if(mCurrentFrame.mvpMapPoints[i]->Observations()>0)
-                        nMap++;
+                if(mCurrentFrame.mvpMapPoints[i] && !mCurrentFrame.mvbOutlier[i])
+                    nTrackedClose++;
+                else
+                    nNonTrackedClose++;
             }
         }
     }
-    else
-    {
-        // There are no visual odometry matches in the monocular case
-        nMap=1;
-        nTotal=1;
-    }
 
-    const float ratioMap = (float)nMap/fmax(1.0f,nTotal);
+    bool bNeedToInsertClose = (nTrackedClose<100) && (nNonTrackedClose>70);
 
     // Thresholds
     float thRefRatio = 0.75f;
@@ -1043,18 +1034,14 @@ bool Tracking::NeedNewKeyFrame()
     if(mSensor==System::MONOCULAR)
         thRefRatio = 0.9f;
 
-    float thMapRatio = 0.35f;
-    if(mnMatchesInliers>300)
-        thMapRatio = 0.20f;
-
     // Condition 1a: More than "MaxFrames" have passed from last keyframe insertion
     const bool c1a = mCurrentFrame.mnId>=mnLastKeyFrameId+mMaxFrames;
     // Condition 1b: More than "MinFrames" have passed and Local Mapping is idle
     const bool c1b = (mCurrentFrame.mnId>=mnLastKeyFrameId+mMinFrames && bLocalMappingIdle);
     //Condition 1c: tracking is weak
-    const bool c1c =  mSensor!=System::MONOCULAR && (mnMatchesInliers<nRefMatches*0.25 || ratioMap<0.3f) ;
+    const bool c1c =  mSensor!=System::MONOCULAR && (mnMatchesInliers<nRefMatches*0.25 || bNeedToInsertClose) ;
     // Condition 2: Few tracked points compared to reference keyframe. Lots of visual odometry compared to map matches.
-    const bool c2 = ((mnMatchesInliers<nRefMatches*thRefRatio|| ratioMap<thMapRatio) && mnMatchesInliers>15);
+    const bool c2 = ((mnMatchesInliers<nRefMatches*thRefRatio|| bNeedToInsertClose) && mnMatchesInliers>15);
 
     if((c1a||c1b||c1c)&&c2)
     {
@@ -1525,11 +1512,14 @@ bool Tracking::Relocalization()
 
 void Tracking::Reset()
 {
-    mpViewer->RequestStop();
 
     cout << "System Reseting" << endl;
-    while(!mpViewer->isStopped())
-        usleep(3000);
+    if(mpViewer)
+    {
+        mpViewer->RequestStop();
+        while(!mpViewer->isStopped())
+            usleep(3000);
+    }
 
     // Reset Local Mapping
     cout << "Reseting Local Mapper...";
@@ -1565,7 +1555,8 @@ void Tracking::Reset()
 	cout << "clear done" << endl;
 	std::cout << "waiting reset" << std::endl;
 	usleep(5000);
-    mpViewer->Release();
+	if(mpViewer)
+    	mpViewer->Release();
 }
 
 void Tracking::ChangeCalibration(const string &strSettingPath)
