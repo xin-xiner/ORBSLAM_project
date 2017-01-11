@@ -109,7 +109,7 @@ public:
     // Call first Shutdown()
     // See format details at: http://www.cvlibs.net/datasets/kitti/eval_odometry.php
     void SaveTrajectoryKITTI(const string &filename);
-
+	void SaveTrajectoryVtx(const string &filename);
 	void SaveMapClouds(const string &filename);
     // TODO: Save/Load functions
     // SaveMap(const string &filename);

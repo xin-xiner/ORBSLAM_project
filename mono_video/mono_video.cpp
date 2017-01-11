@@ -90,6 +90,7 @@ int main(int argc, char **argv)
 
 	// Save camera trajectory
 	SLAM.SaveTrajectoryTUM("CameraTrajectory_all.txt");
+	SLAM.SaveTrajectoryVtx("CameraTrajectory.vtx");
 	SLAM.SaveKeyFrameTrajectoryTUM("CameraTrajectory_keyframe.txt");
 	SLAM.SaveMapClouds("pointClouds.vtx");
 	return 0;

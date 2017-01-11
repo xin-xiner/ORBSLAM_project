@@ -397,10 +397,12 @@ void Tracking::Track()
         // If we have an initial estimation of the camera pose and matching. Track the local map.
         if(!mbOnlyTracking)
         {
-			std::cout << "tracking statue reference frame: " << bOK << std::endl;
-            if(bOK)
-                bOK = TrackLocalMap();
-			std::cout << "tracking statue local map: " << bOK << std::endl;
+			//std::cout << "tracking statue reference frame: " << bOK << std::endl;
+            //if(bOK)
+                bOK |= TrackLocalMap();
+			//std::cout << "tracking statue local map: " << bOK << std::endl;
+			if (!bOK)
+				system("pause");
         }
         else
         {
@@ -696,7 +698,7 @@ void Tracking::CreateInitialMapMonocular()
     float invMedianDepth = 1.0f/medianDepth;
 	std::cout << "medianDepth  " << medianDepth << std::endl;
 	std::cout << "pKFcur->TrackedMapPoints(1)  " << pKFcur->TrackedMapPoints(1) << std::endl;
-    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<6)//wx-adjust-parameter original value is 100
+    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<20)//wx-adjust-parameter original value is 100
     {
         cout << "Wrong initialization, reseting..." << endl;
         Reset();
@@ -772,10 +774,10 @@ bool Tracking::TrackReferenceKeyFrame()
     vector<MapPoint*> vpMapPointMatches;
 
     int nmatches = matcher.SearchByBoW(mpReferenceKF,mCurrentFrame,vpMapPointMatches);
-	std::cout << "TrackReferenceKeyFrame SearchByBoW nmatches: " << nmatches << std::endl;
-	//mCurrentFrame.SetPose(mLastFrame.mTcw);//edit-by-wx 2016-12-09 If tracking on reference frame is lost, we still want to try to track on local map. Then the pose must be set.
+	//std::cout << "TrackReferenceKeyFrame SearchByBoW nmatches: " << nmatches << std::endl;
+	mCurrentFrame.SetPose(mLastFrame.mTcw);//edit-by-wx 2016-12-09 If tracking on reference frame is lost, we still want to try to track on local map. Then the pose must be set.
 
-    if(nmatches<15)//wx-2016-12-09 original value is 15
+    if(nmatches<10)//wx-2016-12-09 original value is 15
         return false;
 
     mCurrentFrame.mvpMapPoints = vpMapPointMatches;
@@ -803,7 +805,7 @@ bool Tracking::TrackReferenceKeyFrame()
                 nmatchesMap++;
         }
     }
-	std::cout << "TrackReferenceKeyFrame after optimization" << nmatchesMap << std::endl;
+	//std::cout << "TrackReferenceKeyFrame after optimization" << nmatchesMap << std::endl;
     return nmatchesMap>=10;
 }
 
@@ -946,7 +948,8 @@ bool Tracking::TrackLocalMap()
     SearchLocalPoints();
 
     // Optimize Pose
-	std::cout << "result " << Optimizer::PoseOptimization(&mCurrentFrame) << std::endl;
+	Optimizer::PoseOptimization(&mCurrentFrame);
+	//std::cout << "result " <<  << std::endl;
     mnMatchesInliers = 0;
 
     // Update MapPoints Statistics
@@ -973,10 +976,10 @@ bool Tracking::TrackLocalMap()
 
     // Decide if the tracking was succesful
     // More restrictive if there was a relocalization recently
-    if(mCurrentFrame.mnId<mnLastRelocFrameId+mMaxFrames && mnMatchesInliers<50)
+    if(mCurrentFrame.mnId<mnLastRelocFrameId+mMaxFrames && mnMatchesInliers<50)//original value is 50
         return false;
 
-    if(mnMatchesInliers<30)
+    if(mnMatchesInliers<10)//wx-parameter-adjust 2016-12-31 original value is 30
         return false;
     else
         return true;
@@ -1292,38 +1295,7 @@ void Tracking::UpdateLocalKeyFrames()
     {
         // Limit the number of keyframes
         if(mvpLocalKeyFrames.size()>80)
-            break;
 
-        KeyFrame* pKF = *itKF;
-
-        const vector<KeyFrame*> vNeighs = pKF->GetBestCovisibilityKeyFrames(10);
-
-        for(vector<KeyFrame*>::const_iterator itNeighKF=vNeighs.begin(), itEndNeighKF=vNeighs.end(); itNeighKF!=itEndNeighKF; itNeighKF++)
-        {
-            KeyFrame* pNeighKF = *itNeighKF;
-            if(!pNeighKF->isBad())
-            {
-                if(pNeighKF->mnTrackReferenceForFrame!=mCurrentFrame.mnId)
-                {
-                    mvpLocalKeyFrames.push_back(pNeighKF);
-                    pNeighKF->mnTrackReferenceForFrame=mCurrentFrame.mnId;
-                    break;
-                }
-            }
-        }
-
-        const set<KeyFrame*> spChilds = pKF->GetChilds();
-        for(set<KeyFrame*>::const_iterator sit=spChilds.begin(), send=spChilds.end(); sit!=send; sit++)
-        {
-            KeyFrame* pChildKF = *sit;
-            if(!pChildKF->isBad())
-            {
-                if(pChildKF->mnTrackReferenceForFrame!=mCurrentFrame.mnId)
-                {
-                    mvpLocalKeyFrames.push_back(pChildKF);
-                    pChildKF->mnTrackReferenceForFrame=mCurrentFrame.mnId;
-                    break;
-                }
             }
         }
 
