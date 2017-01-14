@@ -635,6 +635,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\fisheye_corrector\fisheye_corrector.cpp" />
     <ClCompile Include="E:\ORB_SLAM2-master\src\System.cc" />
     <ClCompile Include="E:\ORB_SLAM2-master\src\Tracking.cc" />
     <ClCompile Include="E:\ORB_SLAM2-master\src\LocalMapping.cc" />
@@ -659,6 +660,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="E:/ORB_SLAM2-master/build/ZERO_CHECK.vcxproj">
       <Project>9549D833-8EA1-47E1-A39F-D05099C163BF</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\fisheye_corrector\fisheye_corrector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

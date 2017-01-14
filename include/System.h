@@ -53,7 +53,8 @@ public:
     enum eSensor{
         MONOCULAR=0,
         STEREO=1,
-        RGBD=2
+        RGBD=2,
+		FISHEYE=3
     };
 
 public:
@@ -76,6 +77,8 @@ public:
     // Input images: RGB (CV_8UC3) or grayscale (CV_8U). RGB is converted to grayscale.
     // Returns the camera pose (empty if tracking fails).
     cv::Mat TrackMonocular(const cv::Mat &im, const double &timestamp);
+
+	cv::Mat TrackFisheye(const cv::Mat& imFisheyeGray, const std::vector<cv::Mat> &imList, const double &timestamp);
 
     // This stops local mapping thread (map building) and performs only camera tracking.
     void ActivateLocalizationMode();

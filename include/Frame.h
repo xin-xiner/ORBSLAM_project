@@ -31,7 +31,7 @@
 #include "ORBextractor.h"
 
 #include <opencv2/opencv.hpp>
-
+#include "fisheye_corrector\fisheye_corrector.h"
 namespace ORB_SLAM2
 {
 #define FRAME_GRID_ROWS 48
@@ -56,10 +56,12 @@ public:
 
     // Constructor for Monocular cameras.
     Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth);
-
+	
+	Frame(const std::vector<cv::Mat> &imGray, const double &timeStamp, std::vector<FisheyeCorrector> &correctors, ORBextractor* extractor, ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth);
     // Extract ORB on the image. 0 for left image and 1 for right image.
     void ExtractORB(int flag, const cv::Mat &im);
-
+	void ExtractORB(int flag, const cv::Mat &im);
+	void ExtractORB(const std::vector<cv::Mat> &ims, std::vector<FisheyeCorrector> &correctors);
     // Compute Bag of Words representation.
     void ComputeBoW();
 

@@ -227,6 +227,71 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     AssignFeaturesToGrid();
 }
 
+Frame::Frame(const std::vector<cv::Mat> &imGray, const double &timeStamp, std::vector<FisheyeCorrector> &correctors, ORBextractor* extractor, ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth)
+	:mpORBvocabulary(voc), mpORBextractorLeft(extractor), mpORBextractorRight(static_cast<ORBextractor*>(NULL)),
+	mTimeStamp(timeStamp), mK(K.clone()), mDistCoef(distCoef.clone()), mbf(bf), mThDepth(thDepth)
+{
+
+
+	// This is done only for the first Frame (or after a change in the calibration)
+	if (mbInitialComputations)
+	{
+		//ComputeImageBounds(imGray);
+		mnMinX = 0.0f;
+		mnMaxX = 2 * cx;
+		mnMinY = 0.0f;
+		mnMaxY = 2 * cy;
+
+
+		mfGridElementWidthInv = static_cast<float>(FRAME_GRID_COLS) / static_cast<float>(mnMaxX - mnMinX);
+		mfGridElementHeightInv = static_cast<float>(FRAME_GRID_ROWS) / static_cast<float>(mnMaxY - mnMinY);
+
+		fx = K.at<float>(0, 0);
+		fy = K.at<float>(1, 1);
+		cx = K.at<float>(0, 2);
+		cy = K.at<float>(1, 2);
+		invfx = 1.0f / fx;
+		invfy = 1.0f / fy;
+
+		mbInitialComputations = false;
+	}
+
+	// Frame ID
+	mnId = nNextId++;
+
+	// Scale Level Info
+	mnScaleLevels = mpORBextractorLeft->GetLevels();
+	mfScaleFactor = mpORBextractorLeft->GetScaleFactor();
+	mfLogScaleFactor = log(mfScaleFactor);
+	mvScaleFactors = mpORBextractorLeft->GetScaleFactors();
+	mvInvScaleFactors = mpORBextractorLeft->GetInverseScaleFactors();
+	mvLevelSigma2 = mpORBextractorLeft->GetScaleSigmaSquares();
+	mvInvLevelSigma2 = mpORBextractorLeft->GetInverseScaleSigmaSquares();
+
+	// ORB extraction
+	ExtractORB(imGray, correctors);
+
+	N = mvKeys.size();
+
+	if (mvKeys.empty())
+		return;
+
+
+	// Set no stereo information
+	mvuRight = vector<float>(N, -1);
+	mvDepth = vector<float>(N, -1);
+
+	mvpMapPoints = vector<MapPoint*>(N, static_cast<MapPoint*>(NULL));
+	mvbOutlier = vector<bool>(N, false);
+
+
+
+	mb = mbf / fx;
+
+	AssignFeaturesToGrid();
+}
+
+
 void Frame::AssignFeaturesToGrid()
 {
     int nReserve = 0.5f*N/(FRAME_GRID_COLS*FRAME_GRID_ROWS);
@@ -250,6 +315,31 @@ void Frame::ExtractORB(int flag, const cv::Mat &im)
         (*mpORBextractorLeft)(im,cv::Mat(),mvKeys,mDescriptors);
     else
         (*mpORBextractorRight)(im,cv::Mat(),mvKeysRight,mDescriptorsRight);
+}
+
+void Frame::ExtractORB(const std::vector<cv::Mat> &ims, std::vector<FisheyeCorrector> &correctors)
+{
+	std::vector<cv::KeyPoint> mvKeys_current,mvfisheye_keys_current,mvundist_keys_current;
+	cv::Mat mDescriptors_current;
+	for (int i = 0; i < ims.size(); i++)
+	{
+		(*mpORBextractorLeft)(ims[i], cv::Mat(), mvKeys_current, mDescriptors_current);
+		correctors[i].mapToOriginalImage(mvKeys_current, mvfisheye_keys_current);
+		std::vector<bool> points_validate;
+		correctors[i].mapFromCorrectedImageToCenterImagePlane(mvKeys_current, mvundist_keys_current, points_validate, cx, cy, fx);
+		mvKeys.reserve(mvKeys.size()+mvKeys_current.size());
+		mDescriptors.reserve(mDescriptors.rows+mDescriptors_current.rows);
+		mvKeysUn.reserve(mvKeysUn.size() + mvKeys_current.size());
+		for (int j = 0; j < mvKeys_current.size(); j++)
+		{
+			if (points_validate[j])
+			{
+				mvKeys.push_back(mvfisheye_keys_current[j]);
+				mvKeysUn.push_back(mvundist_keys_current[j]);
+				mDescriptors.push_back(mDescriptors.row(j));
+			}
+		}
+	}
 }
 
 void Frame::SetPose(cv::Mat Tcw)

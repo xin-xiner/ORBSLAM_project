@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="E:\ORB_SLAM2-master\src\System.cc">
@@ -58,6 +58,9 @@
     <ClCompile Include="E:\ORB_SLAM2-master\src\Viewer.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\fisheye_corrector\fisheye_corrector.cpp">
+      <Filter>fisheyeCorrector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\ORB_SLAM2-master\CMakeLists.txt" />
@@ -66,5 +69,13 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{59E53FA6-8573-4295-AA0B-3C2096186E88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fisheyeCorrector">
+      <UniqueIdentifier>{020e0d9c-1d86-48ff-acd2-9afa5e08e08a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\fisheye_corrector\fisheye_corrector.h">
+      <Filter>fisheyeCorrector</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

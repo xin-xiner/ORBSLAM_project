@@ -82,31 +82,32 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
     if(fps==0)
         fps=30;
 
+	//mCameraNum = fSettings["Camera.cameraNumber"];
     // Max/Min Frames to insert keyframes and to check relocalisation
     mMinFrames = 0;
     mMaxFrames = fps;
 
-    cout << endl << "Camera Parameters: " << endl;
-    cout << "- fx: " << fx << endl;
-    cout << "- fy: " << fy << endl;
-    cout << "- cx: " << cx << endl;
-    cout << "- cy: " << cy << endl;
-    cout << "- k1: " << DistCoef.at<float>(0) << endl;
-    cout << "- k2: " << DistCoef.at<float>(1) << endl;
+    std::cout << endl << "Camera Parameters: " << endl;
+    std::cout << "- fx: " << fx << endl;
+    std::cout << "- fy: " << fy << endl;
+    std::cout << "- cx: " << cx << endl;
+    std::cout << "- cy: " << cy << endl;
+    std::cout << "- k1: " << DistCoef.at<float>(0) << endl;
+    std::cout << "- k2: " << DistCoef.at<float>(1) << endl;
     if(DistCoef.rows==5)
-        cout << "- k3: " << DistCoef.at<float>(4) << endl;
-    cout << "- p1: " << DistCoef.at<float>(2) << endl;
-    cout << "- p2: " << DistCoef.at<float>(3) << endl;
-    cout << "- fps: " << fps << endl;
+        std::cout << "- k3: " << DistCoef.at<float>(4) << endl;
+    std::cout << "- p1: " << DistCoef.at<float>(2) << endl;
+    std::cout << "- p2: " << DistCoef.at<float>(3) << endl;
+    std::cout << "- fps: " << fps << endl;
 
 
     int nRGB = fSettings["Camera.RGB"];
     mbRGB = nRGB;
 
     if(mbRGB)
-        cout << "- color order: RGB (ignored if grayscale)" << endl;
+        std::cout << "- color order: RGB (ignored if grayscale)" << endl;
     else
-        cout << "- color order: BGR (ignored if grayscale)" << endl;
+        std::cout << "- color order: BGR (ignored if grayscale)" << endl;
 
     // Load ORB parameters
 
@@ -124,17 +125,22 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
     if(sensor==System::MONOCULAR)
         mpIniORBextractor = new ORBextractor(2*nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
 
-    cout << endl  << "ORB Extractor Parameters: " << endl;
-    cout << "- Number of Features: " << nFeatures << endl;
-    cout << "- Scale Levels: " << nLevels << endl;
-    cout << "- Scale Factor: " << fScaleFactor << endl;
-    cout << "- Initial Fast Threshold: " << fIniThFAST << endl;
-    cout << "- Minimum Fast Threshold: " << fMinThFAST << endl;
+	if (sensor == System::FISHEYE)
+	{
+		mpIniORBextractor = new ORBextractor(2 * nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST);
+	}
+
+    std::cout << endl  << "ORB Extractor Parameters: " << endl;
+    std::cout << "- Number of Features: " << nFeatures << endl;
+    std::cout << "- Scale Levels: " << nLevels << endl;
+    std::cout << "- Scale Factor: " << fScaleFactor << endl;
+    std::cout << "- Initial Fast Threshold: " << fIniThFAST << endl;
+    std::cout << "- Minimum Fast Threshold: " << fMinThFAST << endl;
 
     if(sensor==System::STEREO || sensor==System::RGBD)
     {
         mThDepth = mbf*(float)fSettings["ThDepth"]/fx;
-        cout << endl << "Depth Threshold (Close/Far Points): " << mThDepth << endl;
+        std::cout << endl << "Depth Threshold (Close/Far Points): " << mThDepth << endl;
     }
 
     if(sensor==System::RGBD)
@@ -263,6 +269,22 @@ cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp)
 
     return mCurrentFrame.mTcw.clone();
 }
+
+cv::Mat Tracking::GrabImageFisheye(const cv::Mat &fisheyeIm, const std::vector<cv::Mat> &im, const double &timestamp, std::vector<FisheyeCorrector> &correctors)
+{
+	mImGray = fisheyeIm;
+
+	if (mState == NOT_INITIALIZED || mState == NO_IMAGES_YET)
+		mCurrentFrame = Frame(im, timestamp, correctors, mpIniORBextractor, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
+	else
+		mCurrentFrame = Frame(im, timestamp, correctors, mpORBextractorLeft, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
+
+	Track();
+
+	return mCurrentFrame.mTcw.clone();
+}
+
+
 
 void Tracking::Track()
 {

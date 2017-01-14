@@ -61,6 +61,7 @@ public:
     cv::Mat GrabImageStereo(const cv::Mat &imRectLeft,const cv::Mat &imRectRight, const double &timestamp);
     cv::Mat GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const double &timestamp);
     cv::Mat GrabImageMonocular(const cv::Mat &im, const double &timestamp);
+	cv::Mat GrabImageFisheye(const cv::Mat &fisheyeIm, const std::vector<cv::Mat> &im, const double &timestamp, std::vector<FisheyeCorrector> &correctors);
 
     void SetLocalMapper(LocalMapping* pLocalMapper);
     void SetLoopClosing(LoopClosing* pLoopClosing);
@@ -185,6 +186,8 @@ protected:
     cv::Mat mK;
     cv::Mat mDistCoef;
     float mbf;
+
+	int mCameraNum;
 
     //New KeyFrame rules (according to fps)
     int mMinFrames;
