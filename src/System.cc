@@ -62,13 +62,23 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     cout << endl << "Loading ORB Vocabulary. This could take a while..." << endl;
 
     mpVocabulary = new ORBVocabulary();
-    bool bVocLoad = mpVocabulary->loadFromTextFile(strVocFile);
-    if(!bVocLoad)
-    {
-        cerr << "Wrong path to vocabulary. " << endl;
-        cerr << "Falied to open at: " << strVocFile << endl;
-        exit(-1);
-    }
+	//try to load from the binary file
+	bool bVocLoad = mpVocabulary->loadFromBinFile(strVocFile + ".bin");
+	if (!bVocLoad)
+	{
+		cerr << "Cannot find binary file for vocabulary. " << endl;
+		cerr << "Falied to open at: " << strVocFile + ".bin" << endl;
+		cerr << "Trying to open the text file. " << endl;
+		bool bVocLoad2 = mpVocabulary->loadFromTextFile(strVocFile);
+		if (!bVocLoad2)
+		{
+			cerr << "Wrong path to vocabulary. " << endl;
+			cerr << "Falied to open at: " << strVocFile << endl;
+			exit(-1);
+		}
+		cerr << "Saving the vocabulary to binary for the next time to " << strVocFile + ".bin" << endl;
+		mpVocabulary->saveToBinFile(strVocFile + ".bin");
+	}
 
     cout << "Vocabulary loaded!" << endl << endl;
 
@@ -166,7 +176,7 @@ cv::Mat System::TrackStereo(const cv::Mat &imLeft, const cv::Mat &imRight, const
 }
 
 
-cv::Mat System::TrackFisheye(const cv::Mat& imFisheyeGray,const std::vector<cv::Mat> &imList, const double &timestamp)
+cv::Mat System::TrackFisheye(const cv::Mat& imFisheyeGray, const std::vector<cv::Mat> &imList, const double &timestamp, std::vector<FisheyeCorrector> &correctors)
 {
 	if (mSensor != FISHEYE)
 	{
@@ -208,7 +218,7 @@ cv::Mat System::TrackFisheye(const cv::Mat& imFisheyeGray,const std::vector<cv::
 		}
 	}
 
-	cv::Mat Tcw = mpTracker->GrabImageFisheye(imFisheyeGray,imList, timestamp);
+	cv::Mat Tcw = mpTracker->GrabImageFisheye(imFisheyeGray, imList, timestamp, correctors);
 
 	unique_lock<mutex> lock2(mMutexState);
 	mTrackingState = mpTracker->mState;
@@ -512,10 +522,12 @@ void System::SaveTrajectoryKITTI(const string &filename)
 
 void System::SaveTrajectoryVtx(const string &filename)
 {
+	
 	cout << endl << "Saving camera trajectory to " << filename << " ..." << endl;
 
-
 	vector<KeyFrame*> vpKFs = mpMap->GetAllKeyFrames();
+	if (vpKFs.size() == 0)
+		return;
 	sort(vpKFs.begin(), vpKFs.end(), KeyFrame::lId);
 
 	// Transform all keyframes so that the first keyframe is at the origin.

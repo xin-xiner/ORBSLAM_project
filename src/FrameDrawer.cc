@@ -118,7 +118,8 @@ cv::Mat FrameDrawer::DrawFrame()
             }
         }
     }
-
+	cv::drawKeypoints(im, vCurrentKeys, im);
+	cv::namedWindow("all_image", 0);
     cv::Mat imWithInfo;
     DrawTextInfo(im,state, imWithInfo);
 

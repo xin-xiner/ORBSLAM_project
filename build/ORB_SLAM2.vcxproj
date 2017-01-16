@@ -139,6 +139,9 @@
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
@@ -635,7 +638,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\fisheye_corrector\fisheye_corrector.cpp" />
+    <ClCompile Include="..\include\fisheye_corrector\fisheye_corrector.cpp" />
     <ClCompile Include="E:\ORB_SLAM2-master\src\System.cc" />
     <ClCompile Include="E:\ORB_SLAM2-master\src\Tracking.cc" />
     <ClCompile Include="E:\ORB_SLAM2-master\src\LocalMapping.cc" />
@@ -662,7 +665,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\fisheye_corrector\fisheye_corrector.h" />
+    <ClInclude Include="..\include\fisheye_corrector\fisheye_corrector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

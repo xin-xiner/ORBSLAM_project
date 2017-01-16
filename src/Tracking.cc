@@ -117,6 +117,8 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
     int fIniThFAST = fSettings["ORBextractor.iniThFAST"];
     int fMinThFAST = fSettings["ORBextractor.minThFAST"];
 
+
+	
     mpORBextractorLeft = new ORBextractor(nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
 
     if(sensor==System::STEREO)
@@ -128,6 +130,11 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
 	if (sensor == System::FISHEYE)
 	{
 		mpIniORBextractor = new ORBextractor(2 * nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST);
+		int n_camera = fSettings["Camera.n_camera"];
+		for (int i = 0; i < n_camera; i++)
+		{
+			mpFisheyeORBextractor.push_back(new ORBextractor(2 * nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST));
+		}
 	}
 
     std::cout << endl  << "ORB Extractor Parameters: " << endl;
@@ -275,9 +282,9 @@ cv::Mat Tracking::GrabImageFisheye(const cv::Mat &fisheyeIm, const std::vector<c
 	mImGray = fisheyeIm;
 
 	if (mState == NOT_INITIALIZED || mState == NO_IMAGES_YET)
-		mCurrentFrame = Frame(im, timestamp, correctors, mpIniORBextractor, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
+		mCurrentFrame = Frame(im, timestamp, correctors, mpFisheyeORBextractor, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
 	else
-		mCurrentFrame = Frame(im, timestamp, correctors, mpORBextractorLeft, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
+		mCurrentFrame = Frame(im, timestamp, correctors, mpFisheyeORBextractor, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
 
 	Track();
 
@@ -1317,9 +1324,40 @@ void Tracking::UpdateLocalKeyFrames()
     {
         // Limit the number of keyframes
         if(mvpLocalKeyFrames.size()>80)
+			break;
 
-            }
-        }
+		KeyFrame* pKF = *itKF;
+
+		const vector<KeyFrame*> vNeighs = pKF->GetBestCovisibilityKeyFrames(10);
+
+		for (vector<KeyFrame*>::const_iterator itNeighKF = vNeighs.begin(), itEndNeighKF = vNeighs.end(); itNeighKF != itEndNeighKF; itNeighKF++)
+		{
+			KeyFrame* pNeighKF = *itNeighKF;
+			if (!pNeighKF->isBad())
+			{
+				if (pNeighKF->mnTrackReferenceForFrame != mCurrentFrame.mnId)
+				{
+					mvpLocalKeyFrames.push_back(pNeighKF);
+					pNeighKF->mnTrackReferenceForFrame = mCurrentFrame.mnId;
+					break;
+				}
+			}
+		}
+
+		const set<KeyFrame*> spChilds = pKF->GetChilds();
+		for (set<KeyFrame*>::const_iterator sit = spChilds.begin(), send = spChilds.end(); sit != send; sit++)
+		{
+			KeyFrame* pChildKF = *sit;
+			if (!pChildKF->isBad())
+			{
+				if (pChildKF->mnTrackReferenceForFrame != mCurrentFrame.mnId)
+				{
+					mvpLocalKeyFrames.push_back(pChildKF);
+					pChildKF->mnTrackReferenceForFrame = mCurrentFrame.mnId;
+					break;
+				}
+			}
+		}
 
         KeyFrame* pParent = pKF->GetParent();
         if(pParent)

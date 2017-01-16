@@ -73,7 +73,7 @@ void MapDrawer::DrawMapPoints()
         if((*sit)->isBad())
             continue;
         cv::Mat pos = (*sit)->GetWorldPos();
-        glVertex3f(pos.at<float>(0),pos.at<float>(1),pos.at<float>(2));
+		glVertex3f(pos.at<float>(0), pos.at<float>(1) , pos.at<float>(2) );
 
     }
 

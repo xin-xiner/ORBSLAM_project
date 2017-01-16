@@ -6,14 +6,14 @@
 #include<opencv2/core/core.hpp>
 
 #include"System.h"
-
+#include <fisheye_corrector\fisheye_corrector.h>
 using namespace std;
 
 #define usleep(x) Sleep((float)x/1000.0f)
 
 int main(int argc, char **argv)
 {
-	if (argc != 4)
+	if (argc != 5)
 	{
 		cerr << endl << "Usage: ./mono_kitti path_to_vocabulary path_to_settings path_to_sequence" << endl;
 		return 1;
@@ -26,7 +26,38 @@ int main(int argc, char **argv)
 	int nImages = video.get(CV_CAP_PROP_FRAME_COUNT);
 	double fps = video.get(CV_CAP_PROP_FPS);
 	// Create SLAM system. It initializes all system threads and gets ready to process frames.
-	ORB_SLAM2::System SLAM(argv[1], argv[2], ORB_SLAM2::System::MONOCULAR, true);
+	ORB_SLAM2::System SLAM(argv[1], argv[2], ORB_SLAM2::System::FISHEYE, true);
+	//ORB_SLAM2::System SLAM(argv[1], argv[2], ORB_SLAM2::System::MONOCULAR, true);
+
+	float pixel_height = 0.0042;
+	float f_image_ = 306.605;
+	
+	std::string correction_table = argv[4];
+	std::cout << "generate corrector" << std::endl;
+	std::vector<FisheyeCorrector> correctors(3);
+	std::cout << video.get(CV_CAP_PROP_FRAME_HEIGHT) << std::endl;
+	std::cout << video.get(CV_CAP_PROP_FRAME_WIDTH) << std::endl;
+	std::cout << pixel_height << std::endl;
+	std::cout << f_image_ << std::endl;
+	correctors[0] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 60, 40);
+	correctors[0].setAxisDirection(0, 0, 0);//30,35,-7
+	correctors[0].updateMap();
+	correctors[0].setClipRegion(cv::Rect(cv::Point(0, 0), cv::Point(correctors[0].getCorrectedSize().width, correctors[0].getCorrectedSize().height - 200)));
+	//correctors[0].setSizeScale(0.5);
+
+	correctors[1] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 60, 40);
+	correctors[1].setAxisDirection(80, 0, 0);//30,35,-7
+	correctors[1].updateMap();
+	correctors[1].setClipRegion(cv::Rect(cv::Point(0, 0), cv::Point(correctors[1].getCorrectedSize().width - 270, correctors[1].getCorrectedSize().height - 550)));
+	//correctors[1].setSizeScale(0.5);
+
+
+	correctors[2] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 60, 40);
+	correctors[2].setAxisDirection(-80, 0, 0);//30,35,-7
+	correctors[2].updateMap();
+	correctors[2].setClipRegion(cv::Rect(cv::Point(280, 0), cv::Point(correctors[2].getCorrectedSize().width, correctors[2].getCorrectedSize().height - 550)));
+	//correctors[2].setSizeScale(0.5);
+
 
 	// Vector for tracking time statistics
 	vector<float> vTimesTrack;
@@ -38,14 +69,15 @@ int main(int argc, char **argv)
 
 	long vTimeCount = 0;
 	// Main loop
-	cv::Mat im;
+	cv::Mat fisheye_im;                  
 	for (int ni = 0; ni<nImages; ni++)
 	{
 		// Read image from file
-		video >> im;
+		video >> fisheye_im;
+		cv::cvtColor(fisheye_im, fisheye_im, cv::COLOR_BGR2GRAY);
 		double tframe = vTimeCount;
 
-		if (im.empty())
+		if (fisheye_im.empty())
 		{
 			cerr << endl << "Failed to load image at: " << vTimeCount << endl;
 			return 1;
@@ -56,10 +88,27 @@ int main(int argc, char **argv)
 #else
 		std::chrono::monotonic_clock::time_point t1 = std::chrono::monotonic_clock::now();
 #endif
-
+		std::vector<cv::Mat> imgs;
+		for (int view = 0; view < correctors.size(); view++)
+		{
+			cv::Mat current_view;
+			correctors[view].correct(fisheye_im,current_view);
+			imgs.push_back(current_view);
+			//std::stringstream sst;
+			//sst << "view" << view;
+			//cv::imshow(sst.str(), current_view);
+		}
+		cv::waitKey(10);
 		// Pass the image to the SLAM system
-		SLAM.TrackMonocular(im, tframe);
+		SLAM.TrackFisheye(fisheye_im, imgs, tframe, correctors);
+		//SLAM.TrackMonocular(imgs[0], tframe);
 
+		if (SLAM.GetTrackingState() == 3 || (ni>=30&&ni%30==0))
+		{
+			SLAM.SaveMapClouds("pointClouds.vtx");
+			SLAM.SaveTrajectoryVtx("CameraTrajectory.vtx");
+		}
+		cv::waitKey(0);
 #ifdef COMPILEDWITHC11
 		std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 #else
@@ -71,7 +120,7 @@ int main(int argc, char **argv)
 		vTimesTrack[ni] = ttrack;
 		vTimeCount += 1.0f / fps;
 		// Wait to load the next frame
-	
+		
 	}
 
 	// Stop all threads

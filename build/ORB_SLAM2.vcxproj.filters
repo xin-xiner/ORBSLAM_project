@@ -58,7 +58,7 @@
     <ClCompile Include="E:\ORB_SLAM2-master\src\Viewer.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\fisheye_corrector\fisheye_corrector.cpp">
+    <ClCompile Include="..\include\fisheye_corrector\fisheye_corrector.cpp">
       <Filter>fisheyeCorrector</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,7 +74,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\fisheye_corrector\fisheye_corrector.h">
+    <ClInclude Include="..\include\fisheye_corrector\fisheye_corrector.h">
       <Filter>fisheyeCorrector</Filter>
     </ClInclude>
   </ItemGroup>

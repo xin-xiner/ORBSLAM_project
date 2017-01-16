@@ -78,7 +78,7 @@ public:
     // Returns the camera pose (empty if tracking fails).
     cv::Mat TrackMonocular(const cv::Mat &im, const double &timestamp);
 
-	cv::Mat TrackFisheye(const cv::Mat& imFisheyeGray, const std::vector<cv::Mat> &imList, const double &timestamp);
+	cv::Mat TrackFisheye(const cv::Mat& imFisheyeGray, const std::vector<cv::Mat> &imList, const double &timestamp, std::vector<FisheyeCorrector> &correctors);
 
     // This stops local mapping thread (map building) and performs only camera tracking.
     void ActivateLocalizationMode();
