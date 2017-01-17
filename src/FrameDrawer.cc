@@ -106,20 +106,19 @@ cv::Mat FrameDrawer::DrawFrame()
                 if(vbMap[i])
                 {
                     cv::rectangle(im,pt1,pt2,cv::Scalar(0,255,0));
-                    cv::circle(im,vCurrentKeys[i].pt,2,cv::Scalar(0,255,0),-1);
+                    //cv::circle(im,vCurrentKeys[i].pt,2,cv::Scalar(0,255,0),-1);
                     mnTracked++;
                 }
                 else // This is match to a "visual odometry" MapPoint created in the last frame
                 {
                     cv::rectangle(im,pt1,pt2,cv::Scalar(255,0,0));
-                    cv::circle(im,vCurrentKeys[i].pt,2,cv::Scalar(255,0,0),-1);
+                    //cv::circle(im,vCurrentKeys[i].pt,2,cv::Scalar(255,0,0),-1);
                     mnTrackedVO++;
                 }
             }
         }
     }
-	cv::drawKeypoints(im, vCurrentKeys, im);
-	cv::namedWindow("all_image", 0);
+	//cv::drawKeypoints(im, vCurrentKeys, im);
     cv::Mat imWithInfo;
     DrawTextInfo(im,state, imWithInfo);
 
@@ -167,6 +166,7 @@ void FrameDrawer::DrawTextInfo(cv::Mat &im, int nState, cv::Mat &imText)
 
 void FrameDrawer::Update(Tracking *pTracker)
 {
+	frame_time_stamp = pTracker->mCurrentFrame.mTimeStamp;
     unique_lock<mutex> lock(mMutex);
     pTracker->mImGray.copyTo(mIm);
     mvCurrentKeys=pTracker->mCurrentFrame.mvKeys;

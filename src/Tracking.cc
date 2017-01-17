@@ -369,8 +369,11 @@ void Tracking::Track()
                     }
                     else
                     {
-                        bOK = TrackReferenceKeyFrame();
+                       
                     }
+					if (!bOK)
+						std::cout << "trackWithMotionModel fail" << std::endl;
+					bOK |= TrackReferenceKeyFrame();
                 }
                 else
                 {
@@ -427,8 +430,13 @@ void Tracking::Track()
         if(!mbOnlyTracking)
         {
 			//std::cout << "tracking statue reference frame: " << bOK << std::endl;
-            //if(bOK)
+			if (!bOK)
+				std::cout << "trackWithReference fail" << std::endl;
+           //if(bOK)
                 bOK |= TrackLocalMap();
+
+				if (!bOK)
+					std::cout << "trackWithLocalMap fail" << std::endl;
 			//std::cout << "tracking statue local map: " << bOK << std::endl;
 			if (!bOK)
 				system("pause");
@@ -725,9 +733,9 @@ void Tracking::CreateInitialMapMonocular()
     // Set median depth to 1
     float medianDepth = pKFini->ComputeSceneMedianDepth(2);
     float invMedianDepth = 1.0f/medianDepth;
-	std::cout << "medianDepth  " << medianDepth << std::endl;
-	std::cout << "pKFcur->TrackedMapPoints(1)  " << pKFcur->TrackedMapPoints(1) << std::endl;
-    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<20)//wx-adjust-parameter original value is 100
+	//std::cout << "medianDepth  " << medianDepth << std::endl;
+	//std::cout << "pKFcur->TrackedMapPoints(1)  " << pKFcur->TrackedMapPoints(1) << std::endl;
+    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<100)//wx-adjust-parameter original value is 100
     {
         cout << "Wrong initialization, reseting..." << endl;
         Reset();
@@ -804,9 +812,9 @@ bool Tracking::TrackReferenceKeyFrame()
 
     int nmatches = matcher.SearchByBoW(mpReferenceKF,mCurrentFrame,vpMapPointMatches);
 	//std::cout << "TrackReferenceKeyFrame SearchByBoW nmatches: " << nmatches << std::endl;
-	mCurrentFrame.SetPose(mLastFrame.mTcw);//edit-by-wx 2016-12-09 If tracking on reference frame is lost, we still want to try to track on local map. Then the pose must be set.
+	//mCurrentFrame.SetPose(mLastFrame.mTcw);//edit-by-wx 2016-12-09 If tracking on reference frame is lost, we still want to try to track on local map. Then the pose must be set.
 
-    if(nmatches<10)//wx-2016-12-09 original value is 15
+    if(nmatches<15)//wx-2016-12-09 original value is 15
         return false;
 
     mCurrentFrame.mvpMapPoints = vpMapPointMatches;
@@ -1008,7 +1016,7 @@ bool Tracking::TrackLocalMap()
     if(mCurrentFrame.mnId<mnLastRelocFrameId+mMaxFrames && mnMatchesInliers<50)//original value is 50
         return false;
 
-    if(mnMatchesInliers<10)//wx-parameter-adjust 2016-12-31 original value is 30
+    if(mnMatchesInliers<30)//wx-parameter-adjust 2016-12-31 original value is 30
         return false;
     else
         return true;
@@ -1586,7 +1594,7 @@ void Tracking::Reset()
     mlbLost.clear();
 	cout << "clear done" << endl;
 	std::cout << "waiting reset" << std::endl;
-	usleep(5000);
+	//usleep(5000);
 	if(mpViewer)
     	mpViewer->Release();
 }

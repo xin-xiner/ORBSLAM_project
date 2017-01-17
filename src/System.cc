@@ -523,7 +523,7 @@ void System::SaveTrajectoryKITTI(const string &filename)
 void System::SaveTrajectoryVtx(const string &filename)
 {
 	
-	cout << endl << "Saving camera trajectory to " << filename << " ..." << endl;
+	//cout << endl << "Saving camera trajectory to " << filename << " ..." << endl;
 
 	vector<KeyFrame*> vpKFs = mpMap->GetAllKeyFrames();
 	if (vpKFs.size() == 0)
@@ -575,7 +575,7 @@ void System::SaveTrajectoryVtx(const string &filename)
 		f << setprecision(9) << twc.at<float>(0) << " " << twc.at<float>(1) << " " << twc.at<float>(2)  << endl;
 	}
 	f.close();
-	cout << endl << "trajectory saved!" << endl;
+	//cout << endl << "trajectory saved!" << endl;
 }
 int System::GetTrackingState()
 {

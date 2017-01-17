@@ -13,7 +13,7 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-	if (argc != 5)
+	if (argc != 6)
 	{
 		cerr << endl << "Usage: ./mono_kitti path_to_vocabulary path_to_settings path_to_sequence" << endl;
 		return 1;
@@ -40,22 +40,22 @@ int main(int argc, char **argv)
 	std::cout << pixel_height << std::endl;
 	std::cout << f_image_ << std::endl;
 	correctors[0] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 60, 40);
-	correctors[0].setAxisDirection(0, 0, 0);//30,35,-7
+	correctors[0].setAxisDirection(0, 40, 0);//30,35,-7
 	correctors[0].updateMap();
-	correctors[0].setClipRegion(cv::Rect(cv::Point(0, 0), cv::Point(correctors[0].getCorrectedSize().width, correctors[0].getCorrectedSize().height - 200)));
+	correctors[0].setClipRegion(cv::Rect(cv::Point(0, 475), cv::Point(correctors[0].getCorrectedSize().width, correctors[0].getCorrectedSize().height - 200)));
 	//correctors[0].setSizeScale(0.5);
 
-	correctors[1] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 60, 40);
-	correctors[1].setAxisDirection(80, 0, 0);//30,35,-7
+	correctors[1] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 50, 30);
+	correctors[1].setAxisDirection(80, 40, -15);//30,35,-7
 	correctors[1].updateMap();
-	correctors[1].setClipRegion(cv::Rect(cv::Point(0, 0), cv::Point(correctors[1].getCorrectedSize().width - 270, correctors[1].getCorrectedSize().height - 550)));
+	correctors[1].setClipRegion(cv::Rect(cv::Point(0, 605), cv::Point(correctors[1].getCorrectedSize().width, correctors[1].getCorrectedSize().height)));
 	//correctors[1].setSizeScale(0.5);
 
 
-	correctors[2] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 60, 40);
-	correctors[2].setAxisDirection(-80, 0, 0);//30,35,-7
+	correctors[2] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 50, 30);
+	correctors[2].setAxisDirection(-80, 40, 15);//30,35,-7
 	correctors[2].updateMap();
-	correctors[2].setClipRegion(cv::Rect(cv::Point(280, 0), cv::Point(correctors[2].getCorrectedSize().width, correctors[2].getCorrectedSize().height - 550)));
+	correctors[2].setClipRegion(cv::Rect(cv::Point(0, 605), cv::Point(correctors[2].getCorrectedSize().width, correctors[2].getCorrectedSize().height)));
 	//correctors[2].setSizeScale(0.5);
 
 
@@ -63,17 +63,24 @@ int main(int argc, char **argv)
 	vector<float> vTimesTrack;
 	vTimesTrack.resize(nImages);
 
-	cout << endl << "-------" << endl;
-	cout << "Start processing sequence ..." << endl;
-	cout << "Images in the sequence: " << nImages << endl << endl;
+	std::cout << endl << "-------" << endl;
+	std::cout << "Start processing sequence ..." << endl;
+	std::cout << "Images in the sequence: " << nImages << endl << endl;
 
 	long vTimeCount = 0;
 	// Main loop
-	cv::Mat fisheye_im;                  
+	cv::Mat fisheye_im;     
+	std::stringstream sst;
+	sst << argv[5];
+	int start_frame;
+	sst >> start_frame;
 	for (int ni = 0; ni<nImages; ni++)
 	{
+		
 		// Read image from file
 		video >> fisheye_im;
+		if (ni < start_frame)
+			continue;
 		cv::cvtColor(fisheye_im, fisheye_im, cv::COLOR_BGR2GRAY);
 		double tframe = vTimeCount;
 
@@ -108,7 +115,7 @@ int main(int argc, char **argv)
 			SLAM.SaveMapClouds("pointClouds.vtx");
 			SLAM.SaveTrajectoryVtx("CameraTrajectory.vtx");
 		}
-		cv::waitKey(0);
+		//cv::waitKey(0);
 #ifdef COMPILEDWITHC11
 		std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 #else
@@ -118,7 +125,7 @@ int main(int argc, char **argv)
 		double ttrack = std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
 
 		vTimesTrack[ni] = ttrack;
-		vTimeCount += 1.0f / fps;
+		vTimeCount += 1;//1000.0f / fps;
 		// Wait to load the next frame
 		
 	}
@@ -127,15 +134,15 @@ int main(int argc, char **argv)
 	SLAM.Shutdown();
 
 	// Tracking time statistics
-	sort(vTimesTrack.begin(), vTimesTrack.end());
+	std::sort(vTimesTrack.begin(), vTimesTrack.end());
 	float totaltime = 0;
 	for (int ni = 0; ni<nImages; ni++)
 	{
 		totaltime += vTimesTrack[ni];
 	}
-	cout << "-------" << endl << endl;
-	cout << "median tracking time: " << vTimesTrack[nImages / 2] << endl;
-	cout << "mean tracking time: " << totaltime / nImages << endl;
+	std::cout << "-------" << endl << endl;
+	std::cout << "median tracking time: " << vTimesTrack[nImages / 2] << endl;
+	std::cout << "mean tracking time: " << totaltime / nImages << endl;
 
 	// Save camera trajectory
 	SLAM.SaveTrajectoryTUM("CameraTrajectory_all.txt");

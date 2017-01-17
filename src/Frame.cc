@@ -350,12 +350,12 @@ void Frame::ExtractORBFisheye(const std::vector<cv::Mat> &ims, std::vector<Fishe
 				mDescriptors.push_back(mDescriptors_current.row(j));
 			}
 		}
-		cv::Mat part;
+		/*cv::Mat part;
 		cv::drawKeypoints(ims[i], mvKeys_current, part);
 		std::stringstream sst;
 		sst << "part" << i;
 		cv::namedWindow(sst.str(), 0);
-		cv::imshow(sst.str(),part);
+		cv::imshow(sst.str(),part);*/
 	}
 	cv::waitKey(10);
 }

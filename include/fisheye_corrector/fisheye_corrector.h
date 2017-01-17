@@ -286,7 +286,7 @@ void FisheyeCorrector::mapToOriginalImage(const std::vector<pointType>& points, 
 template<class pointType>
 void FisheyeCorrector::mapFromCorrectedImageToCenterImagePlane(const std::vector<pointType>& points, std::vector<pointType>& points_in_pinhole, std::vector<bool>& points_validat, float cx, float cy, float f_center_image)
 {
-	const float max_project_angle_cos = 0.15;//about 82 degree
+	const float max_project_angle_cos = 0.05;//about 87 degree
 
 
 	points_in_pinhole.resize(points.size());

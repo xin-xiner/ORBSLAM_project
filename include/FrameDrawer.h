@@ -47,7 +47,7 @@ public:
 
     // Draw last processed frame.
     cv::Mat DrawFrame();
-
+	double frame_time_stamp = 0;
 protected:
 
     void DrawTextInfo(cv::Mat &im, int nState, cv::Mat &imText);
