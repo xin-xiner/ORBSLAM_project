@@ -418,7 +418,7 @@ void LocalMapping::CreateNewMapPoints()
 
             cv::Mat normal2 = x3D-Ow2;
             float dist2 = cv::norm(normal2);
-
+			
             if(dist1==0 || dist2==0)
                 continue;
 

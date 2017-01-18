@@ -127,7 +127,7 @@ int main(int argc, char **argv)
 		vTimesTrack[ni] = ttrack;
 		vTimeCount += 1;//1000.0f / fps;
 		// Wait to load the next frame
-		
+		cv::waitKey(30);
 	}
 
 	// Stop all threads

@@ -524,8 +524,8 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
     }
 
     // If best reconstruction has enough parallax initialize
-	std::cout << "nGood: " << nGood1 << " " << nGood2 << " " << nGood3 << " " << nGood4 << std::endl;
-	std::cout << "parallaxs: " << parallax1 << " " << parallax2 << " " << parallax3 << " " << parallax4 << std::endl;
+	//std::cout << "nGood: " << nGood1 << " " << nGood2 << " " << nGood3 << " " << nGood4 << std::endl;
+	//std::cout << "parallaxs: " << parallax1 << " " << parallax2 << " " << parallax3 << " " << parallax4 << std::endl;
     if(maxGood==nGood1)
     {
         if(parallax1>minParallax)
@@ -895,14 +895,10 @@ int Initializer::CheckRT(const cv::Mat &R, const cv::Mat &t, const vector<cv::Ke
 
         vCosParallax.push_back(cosParallax);
         vP3D[vMatches12[i].first] = cv::Point3f(p3dC1.at<float>(0),p3dC1.at<float>(1),p3dC1.at<float>(2));
-        
+        nGood++;
 
-		if (cosParallax < 0.99999&&p3dC2.at<float>(2) > 0)
-		{
-			vbGood[vMatches12[i].first] = true;
-			nGood++;
-		}
-            
+        if(cosParallax<0.99998)
+            vbGood[vMatches12[i].first]=true;
     }
 
     if(nGood>0)
