@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 	correctors[0] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 60, 40);
 	correctors[0].setAxisDirection(0, 40, 0);//30,35,-7
 	correctors[0].updateMap();
-	correctors[0].setClipRegion(cv::Rect(cv::Point(0, 475), cv::Point(correctors[0].getCorrectedSize().width, correctors[0].getCorrectedSize().height - 200)));
+	correctors[0].setClipRegion(cv::Rect(cv::Point(0, 475), cv::Point(correctors[0].getCorrectedSize().width, correctors[0].getCorrectedSize().height - 500)));
 	//correctors[0].setSizeScale(0.5);
 
 	correctors[1] = FisheyeCorrector(correction_table, video.get(CV_CAP_PROP_FRAME_HEIGHT), video.get(CV_CAP_PROP_FRAME_WIDTH), pixel_height, f_image_, 50, 30);
