@@ -331,6 +331,8 @@ void System::SaveTrajectoryTUM(const string &filename)
     cout << endl << "Saving camera trajectory to " << filename << " ..." << endl;
 
     vector<KeyFrame*> vpKFs = mpMap->GetAllKeyFrames();
+	if (vpKFs.size() == 0)
+		return;
     sort(vpKFs.begin(),vpKFs.end(),KeyFrame::lId);
 
     // Transform all keyframes so that the first keyframe is at the origin.

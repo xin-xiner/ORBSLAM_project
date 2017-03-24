@@ -165,6 +165,11 @@
   <ItemGroup>
     <ClCompile Include="mono_video.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\build\ORB_SLAM2.vcxproj">
+      <Project>{b0cc9b89-3c54-4aed-a604-bf5a1dee2d56}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

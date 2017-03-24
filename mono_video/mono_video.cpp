@@ -13,7 +13,7 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-	if (argc != 4)
+	if (argc < 4)
 	{
 		cerr << endl << "Usage: ./mono_kitti path_to_vocabulary path_to_settings path_to_sequence" << endl;
 		return 1;
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 		vTimesTrack[ni] = ttrack;
 		vTimeCount += 1.0f / fps;
 		// Wait to load the next frame
-	
+		SLAM.SaveTrajectoryTUM("CameraTrajectory_all.txt");
 	}
 
 	// Stop all threads
