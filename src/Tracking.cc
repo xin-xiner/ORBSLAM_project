@@ -693,17 +693,16 @@ namespace ORB_SLAM2
 
 		Optimizer::GlobalBundleAdjustemnt(mpMap, 20);
 
-		// Set median depth to 1
-		float medianDepth = pKFini->ComputeSceneMedianDepth(2);
-		float invMedianDepth = 1.0f / medianDepth;
-		std::cout << "medianDepth  " << medianDepth << std::endl;
-		std::cout << "pKFcur->TrackedMapPoints(1)  " << pKFcur->TrackedMapPoints(1) << std::endl;
-		if (medianDepth<0 || pKFcur->TrackedMapPoints(1)<20)//wx-adjust-parameter original value is 100
-		{
-			cout << "Wrong initialization, reseting..." << endl;
-			Reset();
-			return;
-		}
+    // Set median depth to 1
+    float medianDepth = pKFini->ComputeSceneMedianDepth(2);
+    float invMedianDepth = 1.0f/medianDepth;
+
+    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<100)
+    {
+        cout << "Wrong initialization, reseting..." << endl;
+        Reset();
+        return;
+    }
 
 		// Scale initial baseline
 		cv::Mat Tc2w = pKFcur->GetPose();
@@ -777,7 +776,7 @@ namespace ORB_SLAM2
 		//std::cout << "TrackReferenceKeyFrame SearchByBoW nmatches: " << nmatches << std::endl;
 		mCurrentFrame.SetPose(mLastFrame.mTcw);//edit-by-wx 2016-12-09 If tracking on reference frame is lost, we still want to try to track on local map. Then the pose must be set.
 
-		if (nmatches<10)//wx-2016-12-09 original value is 15
+		if (nmatches<15)//wx-2016-12-09 original value is 15
 			return false;
 
 		mCurrentFrame.mvpMapPoints = vpMapPointMatches;
@@ -979,7 +978,7 @@ namespace ORB_SLAM2
 		if (mCurrentFrame.mnId<mnLastRelocFrameId + mMaxFrames && mnMatchesInliers<50)//original value is 50
 			return false;
 
-		if (mnMatchesInliers<10)//wx-parameter-adjust 2016-12-31 original value is 30
+		if (mnMatchesInliers<30)//wx-parameter-adjust 2016-12-31 original value is 30
 			return false;
 		else
 			return true;
@@ -1557,7 +1556,7 @@ namespace ORB_SLAM2
 		mlbLost.clear();
 		cout << "clear done" << endl;
 		std::cout << "waiting reset" << std::endl;
-		usleep(5000);
+		
 		if (mpViewer)
 			mpViewer->Release();
 	}
