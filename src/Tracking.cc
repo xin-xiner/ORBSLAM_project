@@ -399,7 +399,7 @@ namespace ORB_SLAM2
 			{
 				//std::cout << "tracking statue reference frame: " << bOK << std::endl;
 				if(bOK)
-				bOK |= TrackLocalMap();
+				bOK = TrackLocalMap();
 				//std::cout << "tracking statue local map: " << bOK << std::endl;
 				/*if (!bOK)
 					system("pause");*/
