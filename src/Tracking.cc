@@ -37,6 +37,8 @@
 
 #include<mutex>
 
+#include "MultiFrameTracking\MultiFrameTracking.h"
+
 #define usleep(x)  Sleep((float)x/1000.0f)
 using namespace std;
 
@@ -281,7 +283,11 @@ namespace ORB_SLAM2
 			if (mSensor == System::STEREO || mSensor == System::RGBD)
 				StereoInitialization();
 			else
-				MonocularInitialization();
+			{
+				if(MonocularInitialization())
+					CreateInitialMapMonocular();
+			}
+				
 
 			mpFrameDrawer->Update(this);
 
@@ -564,7 +570,7 @@ namespace ORB_SLAM2
 		}
 	}
 
-	void Tracking::MonocularInitialization()
+	bool Tracking::MonocularInitialization()
 	{
 		std::cout << "mCurrentFrame.mvKeys.size() " << mCurrentFrame.mvKeys.size() << std::endl;
 		if (!mpInitializer)
@@ -585,8 +591,8 @@ namespace ORB_SLAM2
 
 				fill(mvIniMatches.begin(), mvIniMatches.end(), -1);
 				std::cout << "mCurrentFrame.mvKeys.size()>15  --- " << "mpInitializer initialize" << std::endl;
-				return;
 			}
+			return false;
 		}
 		else
 		{
@@ -598,7 +604,7 @@ namespace ORB_SLAM2
 				mpInitializer = static_cast<Initializer*>(NULL);
 				fill(mvIniMatches.begin(), mvIniMatches.end(), -1);
 				std::cout << "mCurrentFrame.mvKeys.size()<=15 return  ---  mpInitializer deleted" << std::endl;
-				return;
+				return false;
 			}
 
 			// Find correspondences
@@ -612,7 +618,7 @@ namespace ORB_SLAM2
 				delete mpInitializer;
 				mpInitializer = static_cast<Initializer*>(NULL);
 				std::cout << "nmatches<9 return --- mpInitializer deleted" << std::endl;
-				return;
+				return false;
 			}
 
 			cv::Mat Rcw; // Current Camera Rotation
@@ -637,12 +643,13 @@ namespace ORB_SLAM2
 				tcw.copyTo(Tcw.rowRange(0, 3).col(3));
 				mCurrentFrame.SetPose(Tcw);
 
-				CreateInitialMapMonocular();
+				return true;
 			}
 		}
+		return false;
 	}
 
-	void Tracking::CreateInitialMapMonocular()
+	bool Tracking::CreateInitialMapMonocular()
 	{
 		// Create KeyFrames
 		KeyFrame* pKFini = new KeyFrame(mInitialFrame, mpMap, mpKeyFrameDB);
@@ -701,7 +708,7 @@ namespace ORB_SLAM2
     {
         cout << "Wrong initialization, reseting..." << endl;
         Reset();
-        return;
+        return false;
     }
 
 		// Scale initial baseline
@@ -742,6 +749,7 @@ namespace ORB_SLAM2
 		mpMap->mvpKeyFrameOrigins.push_back(pKFini);
 
 		mState = OK;
+		return true;
 	}
 
 	void Tracking::CheckReplacedInLastFrame()

@@ -51,6 +51,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelGenerate", "..\ModelGe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kinect_offline_slam", "kinect_offline_slam\kinect_offline_slam.vcxproj", "{89B9966B-BF2B-4A3E-A17D-1D15094187AB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "multiFrame", "..\multiFrame\multiFrame.vcxproj", "{49990154-CA38-48B7-BED1-8B8FA62C5E57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -223,6 +225,18 @@ Global
 		{89B9966B-BF2B-4A3E-A17D-1D15094187AB}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
 		{89B9966B-BF2B-4A3E-A17D-1D15094187AB}.RelWithDebInfo|Win32.Build.0 = Release|Win32
 		{89B9966B-BF2B-4A3E-A17D-1D15094187AB}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.Debug|Win32.ActiveCfg = Debug|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.Debug|Win32.Build.0 = Debug|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.Debug|x64.ActiveCfg = Debug|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.MinSizeRel|Win32.ActiveCfg = Release|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.MinSizeRel|Win32.Build.0 = Release|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.MinSizeRel|x64.ActiveCfg = Release|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.Release|Win32.ActiveCfg = Release|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.Release|Win32.Build.0 = Release|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.Release|x64.ActiveCfg = Release|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.RelWithDebInfo|Win32.Build.0 = Release|Win32
+		{49990154-CA38-48B7-BED1-8B8FA62C5E57}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

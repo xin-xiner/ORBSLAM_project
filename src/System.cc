@@ -25,6 +25,8 @@
 #include <thread>
 #include <pangolin/pangolin.h>
 #include <iomanip>
+#include "MultiFrameTracking/MultiFrameTracking.h"
+
 #define usleep(x)  Sleep((float)x/1000.0f)
 namespace ORB_SLAM2
 {
@@ -276,6 +278,35 @@ cv::Mat System::TrackMonocular(const cv::Mat &im, const double &timestamp)
     mTrackedKeyPointsUn = mpTracker->mCurrentFrame.mvKeysUn;
 
     return Tcw;
+}
+
+cv::Mat System::TrackMultiFrame(const std::vector<cv::Mat>& ims, const double &timestamp)
+{
+	if (mSensor != MULTIFRAME)
+	{
+		cerr << "ERROR: you called TrackMultiFrame but input sensor was not set to MULTIFRAME." << endl;
+		exit(-1);
+	}
+
+
+	// Check reset
+	{
+		unique_lock<mutex> lock(mMutexReset);
+		if (mbReset)
+		{
+			mpTracker->Reset();
+			mbReset = false;
+		}
+	}
+
+	cv::Mat Tcw = mpmulti_frame_tracker->GrabImageMultiFrame(ims, timestamp);
+
+	unique_lock<mutex> lock2(mMutexState);
+	mTrackingState = mpTracker->mState;
+	mTrackedMapPoints = mpTracker->mCurrentFrame.mvpMapPoints;
+	mTrackedKeyPointsUn = mpTracker->mCurrentFrame.mvKeysUn;
+
+	return Tcw;
 }
 
 void System::ActivateLocalizationMode()

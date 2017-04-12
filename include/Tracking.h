@@ -114,7 +114,7 @@ public:
     bool mbOnlyTracking;
 
     void Reset();
-
+	friend class MultiFrameTracking;
 protected:
 
     // Main tracking function. It is independent of the input sensor.
@@ -124,8 +124,8 @@ protected:
     void StereoInitialization();
 
     // Map initialization for monocular
-    void MonocularInitialization();
-    void CreateInitialMapMonocular();
+    bool MonocularInitialization();
+    bool CreateInitialMapMonocular();
 
     void CheckReplacedInLastFrame();
     bool TrackReferenceKeyFrame();
@@ -214,6 +214,8 @@ protected:
     bool mbRGB;
 
     list<MapPoint*> mlpTemporalPoints;
+
+	
 };
 
 } //namespace ORB_SLAM

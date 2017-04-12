@@ -660,6 +660,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>9549D833-8EA1-47E1-A39F-D05099C163BF</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\MultiFrameTracking\MultiFrameTracking.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

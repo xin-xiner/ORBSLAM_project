@@ -246,8 +246,7 @@
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <DebugInformationFormat>
-      </DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -272,7 +271,7 @@
       <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;Release\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411.lib;..\Thirdparty\Pangolin\build\src\Release\pangolin.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;glu32.lib;opengl32.lib;..\Thirdparty\Pangolin\build\external\glew\lib\glew.lib;F:\programPlugs\Python 2.7\libs\python27.lib;..\Thirdparty\Pangolin\build\external\libpng\lib\libpng16_static.lib;..\Thirdparty\Pangolin\build\external\zlib\lib\zlibstatic.lib;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\Release\DBoW2.lib;..\Thirdparty\g2o\lib\g2o.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>F:\programPlugs\boost_1_60_0\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>E:/ORB_SLAM2-master/build/Release/mono_tum.lib</ImportLibrary>
       <ProgramDataBaseFile>E:/ORB_SLAM2-master/Examples/Monocular/Release/mono_tum.pdb</ProgramDataBaseFile>
