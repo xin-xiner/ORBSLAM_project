@@ -39,13 +39,11 @@ namespace ORB_SLAM2
 		eTrackingState mState;
 		eTrackingState mLastProcessedState;
 
-		// Input sensor
-		int mSensor;
-
 
 	public:
 		MultiFrameTracking(System* pSys, ORBVocabulary* pVoc, FrameDrawer* pFrameDrawer, MapDrawer* pMapDrawer, Map* pMap,
 			KeyFrameDatabase* pKFDB, const string &strSettingPath, const int sensor)
+			:mState(NO_IMAGES_YET), mLastProcessedState(NO_IMAGES_YET)
 		{
 			cv::FileStorage fSettings(strSettingPath, cv::FileStorage::READ);
 			mNcameras = fSettings["MultiCamera.n_frame"];
@@ -66,7 +64,7 @@ namespace ORB_SLAM2
 				mvcamerasToMulFrame.push_back(camera_trans.inv());
 
 				mvpFrameDrawer.push_back(new FrameDrawer(pMap));
-				Tracking*  tracker = new Tracking(pSys, pVoc, mvpFrameDrawer[i], pMapDrawer, pMap, pKFDB, strSettingPath, sensor);
+				Tracking*  tracker = new Tracking(pSys, pVoc, mvpFrameDrawer[i], pMapDrawer, pMap, pKFDB, strSettingPath, System::MONOCULAR);
 				mvptrackers.push_back(tracker);
 
 			}
@@ -91,6 +89,15 @@ namespace ORB_SLAM2
 				MultiFrameInitialization();
 
 				//mpFrameDrawer->Update(this);
+
+				for (int i = 0; i < mNcameras; i++)
+				{
+					cv::Mat im = mvpFrameDrawer[i]->DrawFrame();
+					std::stringstream sst;
+					sst << "Current Frame " << i;
+					cv::imshow(sst.str(), im);
+				}
+				cv::waitKey(10);
 
 				if (mState != OK)
 					return;
@@ -231,7 +238,9 @@ namespace ORB_SLAM2
 			for (int i = 0; i < mNcameras; i++)
 			{
 				cv::Mat im = mvpFrameDrawer[i]->DrawFrame();
-				cv::imshow("ORB-SLAM2: Current Frame", im);
+				std::stringstream sst;
+				sst << "Current Frame " << i;
+				cv::imshow(sst.str(), im);
 			}
 			cv::waitKey(10);
 		}
@@ -297,6 +306,23 @@ namespace ORB_SLAM2
 					iniP3D[i].y = homo_pos_data[1];
 					iniP3D[i].z = homo_pos_data[2];
 				}
+			}
+			public:
+			void SetLocalMapper(LocalMapping *pLocalMapper)
+			{
+				for (int i = 0; i < mNcameras; i++)
+				{
+					mvptrackers[i]->SetLocalMapper(pLocalMapper);
+				}
+			}
+			
+			void SetLoopClosing(LoopClosing *pLoopClosing)
+			{
+				for (int i = 0; i < mNcameras; i++)
+				{
+					mvptrackers[i]->SetLoopClosing(pLoopClosing);
+				}
+				
 			}
 	};
 }

@@ -123,7 +123,7 @@ namespace ORB_SLAM2
 		if (sensor == System::STEREO)
 			mpORBextractorRight = new ORBextractor(nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST);
 
-		if (sensor == System::MONOCULAR)
+		if (sensor == System::MONOCULAR||sensor == System::MULTIFRAME)
 			mpIniORBextractor = new ORBextractor(2 * nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST);
 
 		cout << endl << "ORB Extractor Parameters: " << endl;

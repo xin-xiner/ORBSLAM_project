@@ -130,7 +130,8 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 	{
 		mpmulti_frame_tracker = new MultiFrameTracking(this, mpVocabulary, mpFrameDrawer, mpMapDrawer,
 			mpMap, mpKeyFrameDatabase, strSettingsFile, mSensor);
-
+		mpmulti_frame_tracker->SetLocalMapper(mpLocalMapper);
+		mpmulti_frame_tracker->SetLoopClosing(mpLoopCloser);
 	}
 }
 
@@ -513,10 +514,12 @@ void System::SaveTrajectoryVtx(const string &filename)
 {
 	cout << endl << "Saving camera trajectory to " << filename << " ..." << endl;
 
-
+	
 	vector<KeyFrame*> vpKFs = mpMap->GetAllKeyFrames();
+	if (vpKFs.size() == 0)
+		return;
 	sort(vpKFs.begin(), vpKFs.end(), KeyFrame::lId);
-
+	
 	// Transform all keyframes so that the first keyframe is at the origin.
 	// After a loop closure the first keyframe might not be at the origin.
 	cv::Mat Two = vpKFs[0]->GetPoseInverse();
