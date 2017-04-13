@@ -37,6 +37,9 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="F:\programPlugs\openCV2.4.11\opencv2411.props" />
+    <Import Project="F:\programPlugs\Eigen\Eigen.props" />
+    <Import Project="F:\programPlugs\OpenGL\OpenGL.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -44,6 +47,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -67,7 +71,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;E:\ORB_SLAM2-master\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -75,9 +79,18 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>F:\programPlugs\boost_1_60_0\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\build\Release\ORB_SLAM2.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_videostab2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ts2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_superres2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_stitching2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_contrib2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_nonfree2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ocl2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_gpu2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_photo2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_objdetect2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_legacy2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_video2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_ml2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_calib3d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_features2d2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_highgui2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_imgproc2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_flann2411.lib;F:\programPlugs\openCV2.4.11\opencv\build\x86\vc12\lib\opencv_core2411.lib;..\Thirdparty\Pangolin\build\src\Release\pangolin.lib;..\Thirdparty\Pangolin\build\external\glew\lib\glew.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_thread-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_filesystem-vc120-mt-1_60.lib;F:\programPlugs\boost_1_60_0\lib\win32\libboost_system-vc120-mt-1_60.lib;F:\programPlugs\Python 2.7\libs\python27.lib;..\Thirdparty\Pangolin\build\external\libpng\lib\libpng16_static.lib;..\Thirdparty\Pangolin\build\external\zlib\lib\zlibstatic.lib;..\Thirdparty\Pangolin\build\external\libjpeg\lib\jpeg.lib;..\Thirdparty\DBoW2\lib\Release\DBoW2.lib;..\Thirdparty\g2o\lib\g2o.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\fisheye_corrector\fisheye_corrector.cpp" />
+    <ClCompile Include="multiFrame.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\build\ORB_SLAM2.vcxproj">
+      <Project>{b0cc9b89-3c54-4aed-a604-bf5a1dee2d56}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

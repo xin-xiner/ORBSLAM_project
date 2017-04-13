@@ -124,6 +124,14 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 
     mpLoopCloser->SetTracker(mpTracker);
     mpLoopCloser->SetLocalMapper(mpLocalMapper);
+
+
+	if (mSensor == MULTIFRAME)
+	{
+		mpmulti_frame_tracker = new MultiFrameTracking(this, mpVocabulary, mpFrameDrawer, mpMapDrawer,
+			mpMap, mpKeyFrameDatabase, strSettingsFile, mSensor);
+
+	}
 }
 
 cv::Mat System::TrackStereo(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timestamp)

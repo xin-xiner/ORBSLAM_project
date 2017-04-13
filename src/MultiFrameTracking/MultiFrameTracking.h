@@ -48,7 +48,7 @@ namespace ORB_SLAM2
 			KeyFrameDatabase* pKFDB, const string &strSettingPath, const int sensor)
 		{
 			cv::FileStorage fSettings(strSettingPath, cv::FileStorage::READ);
-			float mNcameras = fSettings["MultiCamera.n_frame"];
+			mNcameras = fSettings["MultiCamera.n_frame"];
 
 			for (int i = 0; i < mNcameras; i++)
 			{
@@ -66,7 +66,7 @@ namespace ORB_SLAM2
 				mvcamerasToMulFrame.push_back(camera_trans.inv());
 
 				mvpFrameDrawer.push_back(new FrameDrawer(pMap));
-				Tracking*  tracker= new Tracking(pSys, pVoc, mvpFrameDrawer[i], 0, pMap, 0, strSettingPath,sensor);
+				Tracking*  tracker = new Tracking(pSys, pVoc, mvpFrameDrawer[i], pMapDrawer, pMap, pKFDB, strSettingPath, sensor);
 				mvptrackers.push_back(tracker);
 
 			}
@@ -228,6 +228,12 @@ namespace ORB_SLAM2
 //				mlFrameTimes.push_back(mlFrameTimes.back());
 //				mlbLost.push_back(mState == LOST);
 //			}
+			for (int i = 0; i < mNcameras; i++)
+			{
+				cv::Mat im = mvpFrameDrawer[i]->DrawFrame();
+				cv::imshow("ORB-SLAM2: Current Frame", im);
+			}
+			cv::waitKey(10);
 		}
 
 
