@@ -357,7 +357,7 @@ void Frame::ExtractORBFisheye(const std::vector<cv::Mat> &ims, std::vector<Fishe
 		cv::namedWindow(sst.str(), 0);
 		cv::imshow(sst.str(),part);*/
 	}
-	cv::waitKey(10);
+	//cv::waitKey(10);
 }
 
 void Frame::SetPose(cv::Mat Tcw)

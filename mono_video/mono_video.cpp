@@ -74,6 +74,7 @@ int main(int argc, char **argv)
 	sst << argv[5];
 	int start_frame;
 	sst >> start_frame;
+	cv::waitKey(10000);
 	for (int ni = 0; ni<nImages; ni++)
 	{
 		

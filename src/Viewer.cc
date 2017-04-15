@@ -87,13 +87,19 @@ void Viewer::Run()
     pangolin::OpenGlMatrix Twc;
     Twc.SetIdentity();
 
-    cv::namedWindow("ORB-SLAM2: Current Frame");
+    cv::namedWindow("ORB-SLAM2: Current Frame",0);
 
     bool bFollow = true;
     bool bLocalizationMode = false;
 
     while(1)
     {
+		if (mpSystem->mpLoopCloser->isRunningGBA())
+			while (!mpSystem->mpLoopCloser->isFinishedGBA())
+			{
+				usleep(100);
+			}
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         mpMapDrawer->GetCurrentOpenGLCameraMatrix(Twc);
@@ -131,46 +137,29 @@ void Viewer::Run()
             mpMapDrawer->DrawKeyFrames(menuShowKeyFrames,menuShowGraph);
         if(menuShowPoints)
             mpMapDrawer->DrawMapPoints();
+		//cv::waitKey(10);
 
+		while (mpSystem->mpLoopCloser->isRunningGBA())
+		{
+			usleep(100);
+		}
         pangolin::FinishFrame();
 
 		std::stringstream sst;
 		sst << "scene\\scene" << setfill('0') << setw(7) << mpFrameDrawer->frame_time_stamp;
 		pangolin::SaveWindowOnRender(sst.str());
-		/*unsigned char* openGLAugmentedSceneArr = 0;
-
-		int WindowsWidth = 500;
-		int WindowsHeight = 300;
-		
-		glReadPixels(0, 0, WindowsWidth, WindowsHeight, GL_RGBA, GL_UNSIGNED_BYTE, openGLAugmentedSceneArr);
-		openGLAugmentedSceneArr = new unsigned char[WindowsWidth * WindowsHeight * 4];
-		cv::Mat augmentedScene(WindowsHeight, WindowsWidth, CV_8UC3);
-		cv::Vec3b* sceneData = (cv::Vec3b*)augmentedScene.data;
-
-		for (int i = 0; i < WindowsWidth*WindowsHeight * 4; i++)
-		{
-			if (openGLAugmentedSceneArr[i] < 0)
-				openGLAugmentedSceneArr[i] = 255;;
-		}
-
-		for (int i = 0; i < WindowsWidth*WindowsHeight; i++)
-		{
-			sceneData[i][2] = openGLAugmentedSceneArr[i * 4];
-			sceneData[i][1] = openGLAugmentedSceneArr[i * 4 + 1];
-			sceneData[i][0] = openGLAugmentedSceneArr[i * 4 + 2];
-		}
-		cv::namedWindow("scene", 0);
-		cv::imshow("scene", augmentedScene);*/
+		cv::waitKey(10);
+	
 		sst.clear();
 		sst.str("");
 		sst << "frame\\frame" << setfill('0') << setw(7) << mpFrameDrawer->frame_time_stamp<<".png";
-        cv::Mat im = mpFrameDrawer->DrawFrame();
-        cv::imshow("ORB-SLAM2: Current Frame",im);
+		cv::Mat im = mpFrameDrawer->DrawFrame();
+		cv::imshow("ORB-SLAM2: Current Frame",im);
 		if (!im.empty())
 			cv::imwrite(sst.str(), im);
-		
+		//
         cv::waitKey(mT);
-
+		cv::waitKey(10);
         if(menuReset)
         {
             menuShowGraph = true;

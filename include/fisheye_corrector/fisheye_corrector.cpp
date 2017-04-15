@@ -99,6 +99,7 @@ void FisheyeCorrector::generateMap()
 FisheyeCorrector::FisheyeCorrector(std::string correction_table_file, int input_height, int input_width, float pixelHeight, float f, float vertical_range, float horizontal_range)
 	:pixelHeight_(pixelHeight), f_camera_(f), horizontal_range_radian_(degreeToRadian(horizontal_range)), vertical_range_radian_(degreeToRadian(vertical_range))
 	{
+		std::cout << "input_width " << input_width << "input_height " << input_height << std::endl;
 		size_scale_ = 1;
 		CenterX_fisheye_ = input_width / 2.0f;
 		CenterY_fisheye_ = input_height / 2.0f;
