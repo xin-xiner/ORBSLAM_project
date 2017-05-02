@@ -318,7 +318,8 @@ void KeyFrame::UpdateConnections()
             KFcounter[mit->first]++;
         }
     }
-
+	if (mpParent)
+		KFcounter[mpParent]+= 15;
     // This should not happen
     if(KFcounter.empty())
         return;

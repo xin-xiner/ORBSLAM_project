@@ -52,19 +52,20 @@ camera0.R: [2.26804, -0.068437, 0.0758387]
 camera0.C: [2.43674, 6.08267, 0.639043]
 camera1.R: [1.78283, -1.58887, 0.78539]
 camera1.C: [3.32319, 4.33945, 1.02488]
-camera2.R: [1.76027, 1.5948, -0.83195]
-camera2.C: [1.40618, 4.45921, 1.01059]
-camera3.R: [0.0317361, 2.87452, -1.15324]
-camera3.C: [2.30681, 1.65662, 1.07404]
+camera2.R: [0.0317361, 2.87452, -1.15324]
+camera2.C: [2.30681, 1.65662, 1.07404]
+camera3.R: [1.76027, 1.5948, -0.83195]
+camera3.C: [1.40618, 4.45921, 1.01059]
+
 
 #--------------------------------------------------------------------------------------------
 # Viewer Parameters
 #--------------------------------------------------------------------------------------------
-Viewer.KeyFrameSize: 0.5
+Viewer.KeyFrameSize: 0.05
 Viewer.KeyFrameLineWidth: 3
 Viewer.GraphLineWidth: 0.9
 Viewer.PointSize:2
-Viewer.CameraSize: 0.8
+Viewer.CameraSize: 0.08
 Viewer.CameraLineWidth: 3
 Viewer.ViewpointX: 0
 Viewer.ViewpointY: -0.7

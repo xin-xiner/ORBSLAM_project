@@ -125,7 +125,7 @@ protected:
 
     // Main tracking function. It is independent of the input sensor.
     void Track();
-
+	void setCurrentTrackedPose(const cv::Mat& current_pose);
     // Map initialization for stereo and RGB-D
     void StereoInitialization();
 

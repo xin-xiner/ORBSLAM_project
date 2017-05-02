@@ -36,8 +36,9 @@ int main(int argc, char **argv)
 	std::vector<cv::VideoCapture> cameras(4);
 	cameras[0].open(video_path + "front.avi");
 	cameras[1].open(video_path + "right.avi");
-	cameras[2].open(video_path + "left.avi");
 	cameras[3].open(video_path + "rear.avi");
+	cameras[2].open(video_path + "left.avi");
+	
 
 	int nImages = cameras[0].get(CV_CAP_PROP_FRAME_COUNT);
 	double fps = cameras[0].get(CV_CAP_PROP_FPS);

@@ -28,7 +28,7 @@ MultiFrameTracking::MultiFrameTracking(System* pSys, ORBVocabulary* pVoc, FrameD
 			cv::Mat camera_trans = cv::Mat::eye(4, 4, CV_32F);
 			R.copyTo(camera_trans(cv::Range(0, 3), cv::Range(0, 3)));
 			cv::Mat t = -R*cv::Mat(C);
-			
+			t *= 0.1;
 			//print_vect(t);
 			t.copyTo(camera_trans(cv::Range(0, 3), cv::Range(3, 4)));
 			//print_mat(camera_trans);
@@ -39,7 +39,7 @@ MultiFrameTracking::MultiFrameTracking(System* pSys, ORBVocabulary* pVoc, FrameD
 			mvptrackers.push_back(tracker);
 			//pMapDrawer->addDebugCameras(mvrelative_pose_MulFrameToCameras[i], cv::Scalar(0.5, 0.5, 0.5));
 		}
-		pMapDrawer->addDebugCameras(cv::Mat::eye(4,4,CV_32F), cv::Scalar(0.5, 0.5, 0.5));
+		//pMapDrawer->addDebugCameras(cv::Mat::eye(4,4,CV_32F), cv::Scalar(0.5, 0.5, 0.5));
 		initialize_reference_frames.resize(4, std::vector<Frame>(4));
 	}
 
@@ -80,28 +80,54 @@ void MultiFrameTracking::track()
 		else
 		{
 			cv::waitKey(0);
+			mcamera_pose = cv::Mat::zeros(4, 4, CV_32F);
+			int track_OK_num = 0;
+			for (int i = 0; i < mNcameras; i++)
+			{
+				mvptrackers[i]->Track();
+				if (mvptrackers[i]->mState == OK)
+				{
+					track_OK_num++;
+					mcamera_pose += mvptrackers[i]->mCurrentFrame.mTcw.inv()*mvrelative_pose_MulFrameToCameras[i].inv();
+				}
+			}
+			print_value(track_OK_num);
+			if (track_OK_num == 0)
+				mState = LOST;
+			else
+			{
+				mcamera_pose /= track_OK_num;
+				for (int i = 0; i < mNcameras; i++)
+				{
+					if (mvptrackers[i]->mState != OK)
+					{
+						mvptrackers[i]->setCurrentTrackedPose(mcamera_pose*mvrelative_pose_MulFrameToCameras[i]);
+						std::cout << "set camera " << i << std::endl;
+					}
+				}
+			}
 			//	// System is initialized. Track Frame.
 			//	bool bOK;
 
 			//	// Local Mapping is activated. This is the normal behaviour, unless
 			//	// you explicitly activate the "only tracking" mode.
 
-			//				if (mState == OK)
-			//				{
-			//					// Local Mapping might have changed some MapPoints tracked in last frame
-			//					CheckReplacedInLastFrame();
-			//
-			//					if (mVelocity.empty() || mCurrentFrame.mnId<mnLastRelocFrameId + 2)
-			//					{
-			//						bOK = TrackReferenceKeyFrame();
-			//					}
-			//					else
-			//					{
-			//						bOK = TrackWithMotionModel();
-			//						if (!bOK)
-			//							bOK = TrackReferenceKeyFrame();
-			//					}
-			//				}
+							//if (mState == OK)
+							//{
+							//	// Local Mapping might have changed some MapPoints tracked in last frame
+							//	CheckReplacedInLastFrame();
+			
+							//	if (mVelocity.empty() || mCurrentFrame.mnId<mnLastRelocFrameId + 2)
+							//	{
+							//		bOK = TrackReferenceKeyFrame();
+							//	}
+							//	else
+							//	{
+							//		bOK = TrackWithMotionModel();
+							//		if (!bOK)
+							//			bOK = TrackReferenceKeyFrame();
+							//	}
+							//}
 			//				else
 			//				{
 			//					bOK = Relocalization();
@@ -257,7 +283,7 @@ void MultiFrameTracking::track()
 					initialized_camera_id = i;
 					cv::Mat transform_to_mulFrame = mvrelative_pose_MulFrameToCameras[i];
 					transformInitializedTracker(mvptrackers[i], transform_to_mulFrame);
-					mvptrackers[i]->mpMapDrawer->addDebugCameras(mvptrackers[i]->mCurrentFrame.mTcw,cv::Scalar(0,0,0));
+					//mvptrackers[i]->mpMapDrawer->addDebugCameras(mvptrackers[i]->mCurrentFrame.mTcw,cv::Scalar(0,0,0));
 					mcamera_pose = mvptrackers[i]->mCurrentFrame.mTcw.inv()*mvrelative_pose_MulFrameToCameras[i].inv();
 					break;
 				}
@@ -274,8 +300,9 @@ void MultiFrameTracking::track()
 
 		if (initialized_camera_id >= 0)
 		{
-			mvptrackers[0]->mpMapDrawer->addDebugCameras(mcamera_pose,cv::Scalar(1, 1, 0));
+			//mvptrackers[0]->mpMapDrawer->addDebugCameras(mcamera_pose,cv::Scalar(1, 1, 0));
 			mState = OK;
+			//print_value(mvptrackers[initialized_camera_id]->mpMap->MapPointsInMap());
 			//cv::waitKey(0);
 			for (int i = 0; i < mNcameras; i++)
 			{
@@ -283,19 +310,29 @@ void MultiFrameTracking::track()
 				
 				cv::Mat reference_pose = mvrelative_pose_MulFrameToCameras[i];
 				cv::Mat current_pose = mcamera_pose*mvrelative_pose_MulFrameToCameras[i];
-				print_mat(mcamera_pose);
-				print_mat(reference_pose);
-				print_mat(current_pose);
+				//print_mat(mcamera_pose);
+				//print_mat(reference_pose);
+				//print_mat(current_pose);
 
-				mvptrackers[i]->mpMapDrawer->addDebugCameras(reference_pose.inv(), cv::Scalar(1, 0, 1));
-				mvptrackers[i]->mpMapDrawer->addDebugCameras(current_pose.inv(), cv::Scalar(0, 1, 1));
+				//mvptrackers[i]->mpMapDrawer->addDebugCameras(reference_pose.inv(), cv::Scalar(1, 0, 1));
+				//mvptrackers[i]->mpMapDrawer->addDebugCameras(current_pose.inv(), cv::Scalar(0, 1, 1));
 
-				print_value(initialize_reference_frames[initialized_camera_id][i].mTimeStamp);
+				//print_value(initialize_reference_frames[initialized_camera_id][i].mTimeStamp);
 				if (i == initialized_camera_id)
 					continue;
 				mvptrackers[i]->MonocularInitializationUsingFramePose(initialize_reference_frames[initialized_camera_id][i], reference_pose, current_pose);
+				//print_value(mvptrackers[initialized_camera_id]->mpMap->MapPointsInMap());
 				//cv::waitKey(0);
 			}
+			for (int i = 0; i < mNcameras-1; i++)
+			{
+				mvptrackers[i]->mpLastKeyFrame->AddConnection(mvptrackers[i + 1]->mpLastKeyFrame, 3);
+				//print_value(mvptrackers[initialized_camera_id]->mpMap->MapPointsInMap());
+			}
+			if (mNcameras>1)
+				mvptrackers[mNcameras - 1]->mpLastKeyFrame->AddConnection(mvptrackers[0]->mpLastKeyFrame,3);
+			//print_value(mvptrackers[initialized_camera_id]->mpMap->MapPointsInMap());
+			mState = OK;
 		}
 	}
 
