@@ -129,7 +129,10 @@ void Viewer::Run()
         mpMapDrawer->DrawCurrentCamera(Twc);
         if(menuShowKeyFrames || menuShowGraph)
             mpMapDrawer->DrawKeyFrames(menuShowKeyFrames,menuShowGraph);
-        if(menuShowPoints)
+       
+		mpMapDrawer->DrawDebugCameras();
+		
+		if(menuShowPoints)
             mpMapDrawer->DrawMapPoints();
 
         pangolin::FinishFrame();
@@ -152,7 +155,7 @@ void Viewer::Run()
             mpSystem->Reset();
             menuReset = false;
         }
-
+		//
         if(Stop())
         {
             while(isStopped())

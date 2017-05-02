@@ -38,7 +38,7 @@
 #include<mutex>
 
 #include "MultiFrameTracking\MultiFrameTracking.h"
-
+#include "MultiFrameTracking\debug_utils.h"
 #define usleep(x)  Sleep((float)x/1000.0f)
 using namespace std;
 
@@ -263,8 +263,38 @@ namespace ORB_SLAM2
 
 		Track();
 
-		return mCurrentFrame.mTcw.clone();
+    		return mCurrentFrame.mTcw.clone();
 	}
+
+	void Tracking::GrabImageOnly(const cv::Mat &im, const double &timestamp)
+	{
+		mImGray = im;
+		if (mState == NO_IMAGES_YET)
+		{
+			mState = NOT_INITIALIZED;
+		}
+		mLastProcessedState = mState;
+		if (mImGray.channels() == 3)
+		{
+			if (mbRGB)
+				cvtColor(mImGray, mImGray, CV_RGB2GRAY);
+			else
+				cvtColor(mImGray, mImGray, CV_BGR2GRAY);
+		}
+		else if (mImGray.channels() == 4)
+		{
+			if (mbRGB)
+				cvtColor(mImGray, mImGray, CV_RGBA2GRAY);
+			else
+				cvtColor(mImGray, mImGray, CV_BGRA2GRAY);
+		}
+
+		if (mState == NOT_INITIALIZED || mState == NO_IMAGES_YET)
+			mCurrentFrame = Frame(mImGray, timestamp, mpIniORBextractor, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
+		else
+			mCurrentFrame = Frame(mImGray, timestamp, mpORBextractorLeft, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
+	}
+
 
 	void Tracking::Track()
 	{
@@ -284,7 +314,7 @@ namespace ORB_SLAM2
 				StereoInitialization();
 			else
 			{
-				if(MonocularInitialization())
+				if(MonocularInitialization()==INITIALIZE_SUCCESS)
 					CreateInitialMapMonocular();
 			}
 				
@@ -404,8 +434,8 @@ namespace ORB_SLAM2
 			if (!mbOnlyTracking)
 			{
 				//std::cout << "tracking statue reference frame: " << bOK << std::endl;
-				if(bOK)
-				bOK = TrackLocalMap();
+				//if(bOK)
+				bOK |= TrackLocalMap();
 				//std::cout << "tracking statue local map: " << bOK << std::endl;
 				/*if (!bOK)
 					system("pause");*/
@@ -570,8 +600,9 @@ namespace ORB_SLAM2
 		}
 	}
 
-	bool Tracking::MonocularInitialization()
+	Tracking::eInitilizationState Tracking::MonocularInitialization()
 	{
+		
 		std::cout << "mCurrentFrame.mvKeys.size() " << mCurrentFrame.mvKeys.size() << std::endl;
 		if (!mpInitializer)
 		{
@@ -591,8 +622,9 @@ namespace ORB_SLAM2
 
 				fill(mvIniMatches.begin(), mvIniMatches.end(), -1);
 				std::cout << "mCurrentFrame.mvKeys.size()>15  --- " << "mpInitializer initialize" << std::endl;
+				return INITIALIZE_CREATE;
 			}
-			return false;
+			
 		}
 		else
 		{
@@ -603,8 +635,8 @@ namespace ORB_SLAM2
 				delete mpInitializer;
 				mpInitializer = static_cast<Initializer*>(NULL);
 				fill(mvIniMatches.begin(), mvIniMatches.end(), -1);
-				std::cout << "mCurrentFrame.mvKeys.size()<=15 return  ---  mpInitializer deleted" << std::endl;
-				return false;
+				std::cout << mCurrentFrame.mvKeys.size() << " mCurrentFrame.mvKeys.size()<=100 return  ---  mpInitializer deleted" << std::endl;
+				return INITIALIZE_FAIL;
 			}
 
 			// Find correspondences
@@ -617,8 +649,8 @@ namespace ORB_SLAM2
 			{
 				delete mpInitializer;
 				mpInitializer = static_cast<Initializer*>(NULL);
-				std::cout << "nmatches<9 return --- mpInitializer deleted" << std::endl;
-				return false;
+				std::cout << nmatches << " nmatches<100 return --- mpInitializer deleted" << std::endl;
+				return INITIALIZE_FAIL;
 			}
 
 			cv::Mat Rcw; // Current Camera Rotation
@@ -643,13 +675,13 @@ namespace ORB_SLAM2
 				tcw.copyTo(Tcw.rowRange(0, 3).col(3));
 				mCurrentFrame.SetPose(Tcw);
 
-				return true;
+				return INITIALIZE_SUCCESS;
 			}
 		}
-		return false;
+		return INITIALIZE_FAIL;
 	}
 
-	bool Tracking::CreateInitialMapMonocular()
+	bool Tracking::CreateInitialMapMonocular(bool trust_pose)
 	{
 		// Create KeyFrames
 		KeyFrame* pKFini = new KeyFrame(mInitialFrame, mpMap, mpKeyFrameDB);
@@ -671,7 +703,7 @@ namespace ORB_SLAM2
 
 			//Create MapPoint.
 			cv::Mat worldPos(mvIniP3D[i]);
-
+			
 			MapPoint* pMP = new MapPoint(worldPos, pKFcur, mpMap);
 
 			pKFini->AddMapPoint(pMP, i);
@@ -697,35 +729,41 @@ namespace ORB_SLAM2
 
 		// Bundle Adjustment
 		cout << "New Map created with " << mpMap->MapPointsInMap() << " points" << endl;
+		
 
-		Optimizer::GlobalBundleAdjustemnt(mpMap, 20);
+		if (trust_pose == false)
+		{   
+			float medianDepth2 = pKFini->ComputeSceneMedianDepth(2);
+			Optimizer::GlobalBundleAdjustemnt(mpMap, 20);
+			// Set median depth to 1
+			float medianDepth = pKFini->ComputeSceneMedianDepth(2);
+			float invMedianDepth = 1.0f / medianDepth;
 
-    // Set median depth to 1
-    float medianDepth = pKFini->ComputeSceneMedianDepth(2);
-    float invMedianDepth = 1.0f/medianDepth;
-
-    if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<100)
-    {
-        cout << "Wrong initialization, reseting..." << endl;
-        Reset();
-        return false;
-    }
-
-		// Scale initial baseline
-		cv::Mat Tc2w = pKFcur->GetPose();
-		Tc2w.col(3).rowRange(0, 3) = Tc2w.col(3).rowRange(0, 3)*invMedianDepth;
-		pKFcur->SetPose(Tc2w);
-
-		// Scale points
-		vector<MapPoint*> vpAllMapPoints = pKFini->GetMapPointMatches();
-		for (size_t iMP = 0; iMP<vpAllMapPoints.size(); iMP++)
-		{
-			if (vpAllMapPoints[iMP])
+			if (medianDepth<0 || pKFcur->TrackedMapPoints(1)<60)
 			{
-				MapPoint* pMP = vpAllMapPoints[iMP];
-				pMP->SetWorldPos(pMP->GetWorldPos()*invMedianDepth);
+				std::cout << "medianDepth " << medianDepth << " pKFcur->TrackedMapPoints(1)" << pKFcur->TrackedMapPoints(1) << std::endl;
+				cout << "Wrong initialization medianDepth<0||pKFcur->TrackedMapPoints(1)<60 , reseting..." << endl;
+				Reset();
+				return false;
+			}
+			//invMedianDepth = 1;
+			// Scale initial baseline
+			cv::Mat Tc2w = pKFcur->GetPose();
+			Tc2w.col(3).rowRange(0, 3) = Tc2w.col(3).rowRange(0, 3)*invMedianDepth;
+			pKFcur->SetPose(Tc2w);
+
+			// Scale points
+			vector<MapPoint*> vpAllMapPoints = pKFini->GetMapPointMatches();
+			for (size_t iMP = 0; iMP<vpAllMapPoints.size(); iMP++)
+			{
+				if (vpAllMapPoints[iMP])
+				{
+					MapPoint* pMP = vpAllMapPoints[iMP];
+					pMP->SetWorldPos(pMP->GetWorldPos()*invMedianDepth);
+				}
 			}
 		}
+    
 
 		mpLocalMapper->InsertKeyFrame(pKFini);
 		mpLocalMapper->InsertKeyFrame(pKFcur);
@@ -750,6 +788,56 @@ namespace ORB_SLAM2
 
 		mState = OK;
 		return true;
+	}
+
+
+
+	Tracking::eInitilizationState Tracking::MonocularInitializationUsingFramePose(Frame& reference,cv::Mat& reference_pose,cv::Mat& current_pose)
+	{
+		/*if (tracker->mCurrentFrame.mvKeys.size() <= 10)
+		{
+		return INITIALIZE_FAIL;
+		}*/
+		mCurrentFrame.SetPose(current_pose.inv());
+		reference.SetPose(reference_pose.inv());
+		mInitialFrame = Frame(reference);
+		mLastFrame = Frame(reference);
+		mvbPrevMatched.resize(reference.mvKeysUn.size());
+		for (size_t i = 0; i<reference.mvKeysUn.size(); i++)
+			mvbPrevMatched[i] = reference.mvKeysUn[i].pt;
+
+		if (mpInitializer)
+			delete mpInitializer;
+
+		mpInitializer = new Initializer(reference, 1.0, 200);
+		// Find correspondences
+		ORBmatcher matcher(0.9, true);
+		print_value(mvbPrevMatched.size());
+		int nmatches = matcher.SearchForInitialization(reference, mCurrentFrame, mvbPrevMatched, mvIniMatches, 100);
+
+		// Check if there are enough correspondences
+		std::cout << "nmatches " << nmatches << std::endl;
+		//if (nmatches<10)
+		//	return INITIALIZE_FAIL;
+		//}
+		vector<bool> vbTriangulated; // Triangulated Correspondences (mvIniMatches)
+
+		if (mpInitializer->InitializeKnownFramePose(mCurrentFrame,reference,  mvIniMatches, mvIniP3D, vbTriangulated))
+		{
+			for (size_t i = 0, iend = mvIniMatches.size(); i < iend; i++)
+			{
+				if (mvIniMatches[i] >= 0 && !vbTriangulated[i])
+				{
+					mvIniMatches[i] = -1;
+					nmatches--;
+				}
+			}
+			print_value(nmatches);
+			mState = OK;
+			if (CreateInitialMapMonocular(true))
+				return INITIALIZE_SUCCESS;
+		}
+		return INITIALIZE_FAIL;
 	}
 
 	void Tracking::CheckReplacedInLastFrame()

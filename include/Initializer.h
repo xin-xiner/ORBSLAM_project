@@ -42,7 +42,8 @@ public:
     bool Initialize(const Frame &CurrentFrame, const vector<int> &vMatches12,
                     cv::Mat &R21, cv::Mat &t21, vector<cv::Point3f> &vP3D, vector<bool> &vbTriangulated);
 
-
+	bool InitializeKnownFramePose(const Frame &CurrentFrame,const Frame& ReferenceFrame, const vector<int> &vMatches12,
+		vector<cv::Point3f> &vP3D, vector<bool> &vbTriangulated);
 private:
 
     void FindHomography(vector<bool> &vbMatchesInliers, float &score, cv::Mat &H21);
@@ -68,7 +69,9 @@ private:
     int CheckRT(const cv::Mat &R, const cv::Mat &t, const vector<cv::KeyPoint> &vKeys1, const vector<cv::KeyPoint> &vKeys2,
                        const vector<Match> &vMatches12, vector<bool> &vbInliers,
                        const cv::Mat &K, vector<cv::Point3f> &vP3D, float th2, vector<bool> &vbGood, float &parallax);
-
+	int tryReconstruct(const cv::Mat& R1, const cv::Mat& t1, const cv::Mat& R2, const cv::Mat& t2, const vector<cv::KeyPoint> &vKeys1, const vector<cv::KeyPoint> &vKeys2,
+		const vector<Match> &vMatches12, vector<bool> &vbMatchesInliers,
+		const cv::Mat& K, vector<cv::Point3f> &vP3D, float th2, vector<bool> &vbGood, float &parallax);
     void DecomposeE(const cv::Mat &E, cv::Mat &R1, cv::Mat &R2, cv::Mat &t);
 
 

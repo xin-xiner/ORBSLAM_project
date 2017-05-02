@@ -643,20 +643,29 @@ float KeyFrame::ComputeSceneMedianDepth(const int q)
 
     vector<float> vDepths;
     vDepths.reserve(N);
+	std::cout << "Tcw_" << std::endl << Tcw_ << std::endl;
     cv::Mat Rcw2 = Tcw_.row(2).colRange(0,3);
     Rcw2 = Rcw2.t();
     float zcw = Tcw_.at<float>(2,3);
+	std::ofstream file("remap.vtx");
+	cv::Mat Tcw_inv = Tcw_.inv();
+	std::cout << "Tcw_inv" << std::endl << Tcw_inv << std::endl;
     for(int i=0; i<N; i++)
     {
         if(mvpMapPoints[i])
         {
             MapPoint* pMP = mvpMapPoints[i];
             cv::Mat x3Dw = pMP->GetWorldPos();
+			cv::Mat x3Dpoint = cv::Mat::ones(4,1,CV_32F); x3Dw.copyTo(x3Dpoint.rowRange(0,3));
+			//std::cout<<"x3Dpoint.t() " << x3Dpoint.t() << std::endl;
+			x3Dpoint = Tcw_inv*x3Dpoint;
+			//std::cout << "x3Dpoint.t() " << x3Dpoint.t() << std::endl;
+			file << x3Dpoint.at<float>(0) << " " << x3Dpoint.at<float>(1) << " " << x3Dpoint.at<float>(2) << std::endl;
             float z = Rcw2.dot(x3Dw)+zcw;
             vDepths.push_back(z);
         }
     }
-
+	file.close();
     sort(vDepths.begin(),vDepths.end());
 
     return vDepths[(vDepths.size()-1)/q];

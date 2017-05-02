@@ -61,6 +61,7 @@ public:
     cv::Mat GrabImageStereo(const cv::Mat &imRectLeft,const cv::Mat &imRectRight, const double &timestamp);
     cv::Mat GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const double &timestamp);
     cv::Mat GrabImageMonocular(const cv::Mat &im, const double &timestamp);
+	void GrabImageOnly(const cv::Mat &im, const double &timestamp);
 
     void SetLocalMapper(LocalMapping* pLocalMapper);
     void SetLoopClosing(LoopClosing* pLoopClosing);
@@ -85,7 +86,12 @@ public:
         OK=2,
         LOST=3
     };
-
+	enum eInitilizationState
+	{
+		INITIALIZE_CREATE,
+		INITIALIZE_FAIL,
+		INITIALIZE_SUCCESS
+	};
     eTrackingState mState;
     eTrackingState mLastProcessedState;
 
@@ -124,8 +130,9 @@ protected:
     void StereoInitialization();
 
     // Map initialization for monocular
-    bool MonocularInitialization();
-    bool CreateInitialMapMonocular();
+	eInitilizationState MonocularInitialization();
+	eInitilizationState MonocularInitializationUsingFramePose(Frame& reference, cv::Mat& reference_pose, cv::Mat& current_pose);
+	bool CreateInitialMapMonocular(bool trust_pose = false);
 
     void CheckReplacedInLastFrame();
     bool TrackReferenceKeyFrame();

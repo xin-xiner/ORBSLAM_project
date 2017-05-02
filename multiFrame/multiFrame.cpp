@@ -67,24 +67,23 @@ int main(int argc, char **argv)
 
 	long vTimeCount = 0;
 	// Main loop
-	cv::Mat fisheye_im;
+	
 	std::stringstream sst;
 	sst << argv[5];
 	int start_frame;
 	sst >> start_frame;
 	for (int ni = 0; ni<nImages; ni++)
 	{
-
-		std::vector<cv::Mat> multi_frame_image;
+		cv::Mat fisheye_im;
+		std::vector<cv::Mat> multi_frame_image(4);
 		for (int i = 0; i < 4; i++)
 		{
-			cameras[i] >> fisheye_im;
-			if (fisheye_im.empty())
+			cameras[i] >> multi_frame_image[i];
+			if (multi_frame_image[i].empty())
 			{
 				cerr << endl << "Failed to load image at: " << vTimeCount << endl;
 				return 1;
 			}
-			multi_frame_image.push_back(fisheye_im);
 		}
 		
 		if (ni < start_frame)
@@ -95,6 +94,9 @@ int main(int argc, char **argv)
 		{
 			cv::cvtColor(multi_frame_image[i], multi_frame_image[i], cv::COLOR_BGR2GRAY);
 			corrector.correct(multi_frame_image[i], multi_frame_image[i]);
+			/*std::stringstream sst;
+			sst << "Current Frame " << i;
+			cv::imshow(sst.str(), multi_frame_image[i]);*/
 		}
 		
 		double tframe = vTimeCount;

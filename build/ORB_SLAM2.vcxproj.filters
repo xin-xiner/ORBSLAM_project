@@ -58,6 +58,9 @@
     <ClCompile Include="E:\ORB_SLAM2-master\src\Viewer.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MultiFrameTracking.cpp">
+      <Filter>MultiFrame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\ORB_SLAM2-master\CMakeLists.txt" />
@@ -72,6 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\MultiFrameTracking\MultiFrameTracking.h">
+      <Filter>MultiFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MultiFrameTracking\debug_utils.h">
       <Filter>MultiFrame</Filter>
     </ClInclude>
   </ItemGroup>

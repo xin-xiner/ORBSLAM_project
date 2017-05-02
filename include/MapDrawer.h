@@ -34,13 +34,19 @@ namespace ORB_SLAM2
 class MapDrawer
 {
 public:
+	std::vector<cv::Mat> debug_cameras;
+	std::vector<cv::Scalar> debug_color;
+	void DrawDebugCameras();
+	void addDebugCameras(cv::Mat camera,cv::Scalar color);
+
     MapDrawer(Map* pMap, const string &strSettingPath);
 
     Map* mpMap;
 
     void DrawMapPoints();
     void DrawKeyFrames(const bool bDrawKF, const bool bDrawGraph);
-    void DrawCurrentCamera(pangolin::OpenGlMatrix &Twc);
+	
+	void DrawCurrentCamera(pangolin::OpenGlMatrix &Twc, float r = 0, float g = 1, float b = 0);
     void SetCurrentCameraPose(const cv::Mat &Tcw);
     void SetReferenceKeyFrame(KeyFrame *pKF);
     void GetCurrentOpenGLCameraMatrix(pangolin::OpenGlMatrix &M);

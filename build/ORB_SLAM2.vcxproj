@@ -234,7 +234,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalOptions> -O3 -march=native -std=c++11 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\programPlugs\openCV2.4.11\opencv\build\include;F:\programPlugs\openCV2.4.11\opencv\build\include\opencv;E:\ORB_SLAM2-master;E:\ORB_SLAM2-master\include;F:\programPlugs\Eigen\eigen3;E:\Pangolin-master\include;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\src\include;F:\programPlugs\boost_1_60_0\include\boost-1_60;E:\ORB_SLAM2-master\Thirdparty\Pangolin\build\external\glew\include;E:\ORB_SLAM2-master\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -251,11 +251,12 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <StructMemberAlignment>16Bytes</StructMemberAlignment>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <OpenMPSupport>true</OpenMPSupport>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>true</MinimalRebuild>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;COMPILEDWITHC11;CMAKE_INTDIR=\"Release\";ORB_SLAM2_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -654,6 +655,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="E:\ORB_SLAM2-master\src\Sim3Solver.cc" />
     <ClCompile Include="E:\ORB_SLAM2-master\src\Initializer.cc" />
     <ClCompile Include="E:\ORB_SLAM2-master\src\Viewer.cc" />
+    <ClCompile Include="MultiFrameTracking.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="E:/ORB_SLAM2-master/build/ZERO_CHECK.vcxproj">
@@ -661,6 +663,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\MultiFrameTracking\debug_utils.h" />
     <ClInclude Include="..\src\MultiFrameTracking\MultiFrameTracking.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

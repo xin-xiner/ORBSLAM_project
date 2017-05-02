@@ -80,6 +80,56 @@ void MapDrawer::DrawMapPoints()
     glEnd();
 }
 
+
+
+void MapDrawer::addDebugCameras(cv::Mat camera, cv::Scalar color)
+{
+	debug_cameras.push_back(cv::Mat());
+	camera.copyTo(debug_cameras.back());
+	debug_color.push_back(color);
+
+}
+void MapDrawer::DrawDebugCameras()
+{
+	const float &w = mKeyFrameSize;
+	const float h = w*0.75;
+	const float z = w*0.6;
+	for (int i = 0; i < debug_cameras.size(); i++)
+	{
+		cv::Mat debug_camera_pose = debug_cameras[i].inv().t();
+		glPushMatrix();
+
+		glMultMatrixf(debug_camera_pose.ptr<GLfloat>(0));
+
+		glLineWidth(mKeyFrameLineWidth);
+		glColor3f(debug_color[i][0], debug_color[i][1], debug_color[i][2]);
+		glBegin(GL_LINES);
+		glVertex3f(0, 0, 0);
+		glVertex3f(w, h, z);
+		glVertex3f(0, 0, 0);
+		glVertex3f(w, -h, z);
+		glVertex3f(0, 0, 0);
+		glVertex3f(-w, -h, z);
+		glVertex3f(0, 0, 0);
+		glVertex3f(-w, h, z);
+
+		glVertex3f(w, h, z);
+		glVertex3f(w, -h, z);
+
+		glVertex3f(-w, h, z);
+		glVertex3f(-w, -h, z);
+
+		glVertex3f(-w, h, z);
+		glVertex3f(w, h, z);
+
+		glVertex3f(-w, -h, z);
+		glVertex3f(w, -h, z);
+		glEnd();
+
+		glPopMatrix();
+	}
+}
+
 void MapDrawer::DrawKeyFrames(const bool bDrawKF, const bool bDrawGraph)
 {
     const float &w = mKeyFrameSize;
@@ -176,7 +226,7 @@ void MapDrawer::DrawKeyFrames(const bool bDrawKF, const bool bDrawGraph)
     }
 }
 
-void MapDrawer::DrawCurrentCamera(pangolin::OpenGlMatrix &Twc)
+void MapDrawer::DrawCurrentCamera(pangolin::OpenGlMatrix &Twc,float r,float g,float b)
 {
     const float &w = mCameraSize;
     const float h = w*0.75;
@@ -191,7 +241,7 @@ void MapDrawer::DrawCurrentCamera(pangolin::OpenGlMatrix &Twc)
 #endif
 
     glLineWidth(mCameraLineWidth);
-    glColor3f(0.0f,1.0f,0.0f);
+    glColor3f(r,g,b);
     glBegin(GL_LINES);
     glVertex3f(0,0,0);
     glVertex3f(w,h,z);
