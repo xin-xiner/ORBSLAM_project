@@ -320,6 +320,8 @@ void KeyFrame::UpdateConnections()
     }
 	if (mpParent)
 		KFcounter[mpParent]+= 15;
+	/*if (multiFrame_neighbor)
+		KFcounter[multiFrame_neighbor] += 15;*/
     // This should not happen
     if(KFcounter.empty())
         return;

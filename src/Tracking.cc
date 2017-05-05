@@ -328,7 +328,7 @@ namespace ORB_SLAM2
 		{
 			// System is initialized. Track Frame.
 			bool bOK;
-
+			create_new_keyframe = false;
 			// Initial camera pose estimation using motion model or relocalization (if tracking is lost)
 			if (!mbOnlyTracking)
 			{
@@ -435,6 +435,7 @@ namespace ORB_SLAM2
 			{
 				//std::cout << "tracking statue reference frame: " << bOK << std::endl;
 				//if(bOK)
+				if (mState==OK)
 				bOK |= TrackLocalMap();
 				//std::cout << "tracking statue local map: " << bOK << std::endl;
 				/*if (!bOK)
@@ -545,7 +546,79 @@ namespace ORB_SLAM2
 
 	}
 
-	void Tracking::setCurrentTrackedPose(const cv::Mat& current_pose)
+
+	void Tracking::TrackForMultiFrame()
+	{
+
+		mLastProcessedState = mState;
+
+		// Get Map Mutex -> Map cannot be changed
+		unique_lock<mutex> lock(mpMap->mMutexMapUpdate);
+
+
+		// System is initialized. Track Frame.
+		bool bOK;
+		create_new_keyframe = false;
+		// Initial camera pose estimation using motion model or relocalization (if tracking is lost)
+
+		// Local Mapping is activated. This is the normal behaviour, unless
+		// you explicitly activate the "only tracking" mode.
+
+		if (mState == OK)
+		{
+			// Local Mapping might have changed some MapPoints tracked in last frame
+			CheckReplacedInLastFrame();
+
+			if (mVelocity.empty() || mCurrentFrame.mnId<mnLastRelocFrameId + 2)
+			{
+				bOK = TrackReferenceKeyFrame();
+			}
+			else
+			{
+				bOK = TrackWithMotionModel();
+				if (!bOK)
+					bOK = TrackReferenceKeyFrame();
+			}
+			bOK |= TrackLocalMap();
+		}
+		else
+		{
+			bOK = Relocalization();
+		}
+		
+
+		mCurrentFrame.mpReferenceKF = mpReferenceKF;
+
+		
+		//std::cout << "tracking statue local map: " << bOK << std::endl;
+		/*if (!bOK)
+		system("pause");*/
+		
+
+		if (bOK)
+			mState = OK;
+		else
+			mState = LOST;
+
+		// Update drawer
+		mpFrameDrawer->Update(this);
+
+		// Reset if the camera get lost soon after initialization
+		if (mState == LOST)
+		{
+			/*if (mpMap->KeyFramesInMap() <= 5)
+			{
+			cout << "Track lost soon after initialisation, reseting..." << endl;
+			mpSystem->Reset();
+			return;
+			}*/
+		}
+
+
+	}
+
+
+	bool Tracking::setCurrentTrackedPose(const cv::Mat& current_pose)
 	{
 		mCurrentFrame.SetPose(current_pose);
 		mState = OK;
@@ -580,9 +653,7 @@ namespace ORB_SLAM2
 		}
 		mlpTemporalPoints.clear();
 
-		// Check if we need to insert a new keyframe
-		if (NeedNewKeyFrame())
-			CreateNewKeyFrame();
+		
 
 		// We allow points with high innovation (considererd outliers by the Huber Function)
 		// pass to the new keyframe, so that bundle adjustment will finally decide
@@ -594,6 +665,33 @@ namespace ORB_SLAM2
 				mCurrentFrame.mvpMapPoints[i] = static_cast<MapPoint*>(NULL);
 		}
 		mLastFrame = Frame(mCurrentFrame);
+
+		if (!mCurrentFrame.mpReferenceKF)
+			mCurrentFrame.mpReferenceKF = mpReferenceKF;
+
+		mLastFrame = Frame(mCurrentFrame);
+
+
+		// Store frame pose information to retrieve the complete camera trajectory afterwards.
+		if (!mCurrentFrame.mTcw.empty())
+		{
+			cv::Mat Tcr = mCurrentFrame.mTcw*mCurrentFrame.mpReferenceKF->GetPoseInverse();
+			mlRelativeFramePoses.push_back(Tcr);
+			mlpReferences.push_back(mpReferenceKF);
+			mlFrameTimes.push_back(mCurrentFrame.mTimeStamp);
+			mlbLost.push_back(mState == LOST);
+		}
+		else
+		{
+			// This can happen if tracking is lost
+			mlRelativeFramePoses.push_back(mlRelativeFramePoses.back());
+			mlpReferences.push_back(mlpReferences.back());
+			mlFrameTimes.push_back(mlFrameTimes.back());
+			mlbLost.push_back(mState == LOST);
+		}
+
+		// Check if we need to insert a new keyframe
+		return NeedNewKeyFrame();
 	}
 
 
@@ -875,21 +973,21 @@ namespace ORB_SLAM2
 		//}
 		vector<bool> vbTriangulated; // Triangulated Correspondences (mvIniMatches)
 
-		if (mpInitializer->InitializeKnownFramePose(mCurrentFrame,reference,  mvIniMatches, mvIniP3D, vbTriangulated))
-		{
-			for (size_t i = 0, iend = mvIniMatches.size(); i < iend; i++)
-			{
-				if (mvIniMatches[i] >= 0 && !vbTriangulated[i])
-				{
-					mvIniMatches[i] = -1;
-					nmatches--;
-				}
-			}
-			print_value(nmatches);
-			mState = OK;
-			CreateInitialMapMonocular(true);
-				
-		}
+		//if (mpInitializer->InitializeKnownFramePose(mCurrentFrame,reference,  mvIniMatches, mvIniP3D, vbTriangulated))
+		//{
+		//	for (size_t i = 0, iend = mvIniMatches.size(); i < iend; i++)
+		//	{
+		//		if (mvIniMatches[i] >= 0 && !vbTriangulated[i])
+		//		{
+		//			mvIniMatches[i] = -1;
+		//			nmatches--;
+		//		}
+		//	}
+		//	print_value(nmatches);
+		//	mState = OK;
+		//	CreateInitialMapMonocular(true);
+		//		
+		//}
 		
 
 		KeyFrame* pKFini = new KeyFrame(mInitialFrame, mpMap, mpKeyFrameDB);
@@ -915,7 +1013,8 @@ namespace ORB_SLAM2
 		mCurrentFrame.mpReferenceKF = pKFcur;
 
 		mLastFrame = Frame(mCurrentFrame);
-		mvpLocalMapPoints = mpMap->GetAllMapPoints();
+		//UpdateLocalMap();
+		//mvpLocalMapPoints = mpMap->GetAllMapPoints();
 		pKFcur->ChangeParent(pKFini);
 		mState = OK;
 		return INITIALIZE_SUCCESS;
@@ -952,7 +1051,7 @@ namespace ORB_SLAM2
 		int nmatches = matcher.SearchByBoW(mpReferenceKF, mCurrentFrame, vpMapPointMatches);
 		//std::cout << "TrackReferenceKeyFrame SearchByBoW nmatches: " << nmatches << std::endl;
 		mCurrentFrame.SetPose(mLastFrame.mTcw);//edit-by-wx 2016-12-09 If tracking on reference frame is lost, we still want to try to track on local map. Then the pose must be set.
-
+		print_mat(mCurrentFrame.mTcw);
 		if (nmatches<15)//wx-2016-12-09 original value is 15
 			return false;
 
@@ -1060,7 +1159,7 @@ namespace ORB_SLAM2
 		UpdateLastFrame();
 
 		mCurrentFrame.SetPose(mVelocity*mLastFrame.mTcw);
-
+		print_mat(mCurrentFrame.mTcw);
 		fill(mCurrentFrame.mvpMapPoints.begin(), mCurrentFrame.mvpMapPoints.end(), static_cast<MapPoint*>(NULL));
 
 		// Project points seen in previous frame
@@ -1182,7 +1281,7 @@ namespace ORB_SLAM2
 		if (nKFs <= 2)
 			nMinObs = 2;
 		int nRefMatches = mpReferenceKF->TrackedMapPoints(nMinObs);
-
+		print_value(nRefMatches);
 		// Local Mapping accept keyframes?
 		bool bLocalMappingIdle = mpLocalMapper->AcceptKeyFrames();
 
@@ -1202,9 +1301,10 @@ namespace ORB_SLAM2
 				}
 			}
 		}
-
+		print_value(nTrackedClose);
+		print_value(nNonTrackedClose);
 		bool bNeedToInsertClose = (nTrackedClose<100) && (nNonTrackedClose>70);
-
+		print_value(bNeedToInsertClose);
 		// Thresholds
 		float thRefRatio = 0.75f;
 		if (nKFs<2)
@@ -1215,13 +1315,18 @@ namespace ORB_SLAM2
 
 		// Condition 1a: More than "MaxFrames" have passed from last keyframe insertion
 		const bool c1a = mCurrentFrame.mnId >= mnLastKeyFrameId + mMaxFrames;
+		print_value(c1a);
 		// Condition 1b: More than "MinFrames" have passed and Local Mapping is idle
 		const bool c1b = (mCurrentFrame.mnId >= mnLastKeyFrameId + mMinFrames && bLocalMappingIdle);
+		print_value(bLocalMappingIdle);
+		print_value(c1b);
 		//Condition 1c: tracking is weak
 		const bool c1c = mSensor != System::MONOCULAR && (mnMatchesInliers<nRefMatches*0.25 || bNeedToInsertClose);
+
 		// Condition 2: Few tracked points compared to reference keyframe. Lots of visual odometry compared to map matches.
 		const bool c2 = ((mnMatchesInliers<nRefMatches*thRefRatio || bNeedToInsertClose) && mnMatchesInliers>15);
-
+		print_value(mnMatchesInliers);
+		print_value(c2);
 		if ((c1a || c1b || c1c) && c2)
 		{
 			// If the mapping accepts keyframes, insert keyframe.
@@ -1323,9 +1428,10 @@ namespace ORB_SLAM2
 		mpLocalMapper->InsertKeyFrame(pKF);
 
 		mpLocalMapper->SetNotStop(false);
-
+		pKF->ChangeParent(mpLastKeyFrame);
 		mnLastKeyFrameId = mCurrentFrame.mnId;
 		mpLastKeyFrame = pKF;
+		create_new_keyframe = true;
 	}
 
 	void Tracking::SearchLocalPoints()
@@ -1437,8 +1543,8 @@ namespace ORB_SLAM2
 				}
 			}
 		}
-		if (mpLastKeyFrame)
-			keyframeCounter[mpLastKeyFrame] += 15;
+		/*if (mpLastKeyFrame)
+			keyframeCounter[mpLastKeyFrame] += 15;*/
 		if (keyframeCounter.empty())
 			return;
 

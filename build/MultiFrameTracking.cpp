@@ -79,30 +79,39 @@ void MultiFrameTracking::track()
 		}
 		else
 		{
-			cv::waitKey(0);
+			//cv::waitKey(0);
 			mcamera_pose = cv::Mat::zeros(4, 4, CV_32F);
 			int track_OK_num = 0;
+			int track_OK_ID = -1;
 			for (int i = 0; i < mNcameras; i++)
 			{
-				mvptrackers[i]->Track();
+				mvptrackers[i]->TrackForMultiFrame();
 				if (mvptrackers[i]->mState == OK)
 				{
 					track_OK_num++;
+					track_OK_ID = i;
 					mcamera_pose += mvptrackers[i]->mCurrentFrame.mTcw.inv()*mvrelative_pose_MulFrameToCameras[i].inv();
 				}
 			}
 			print_value(track_OK_num);
 			if (track_OK_num == 0)
+			{
 				mState = LOST;
+			}
 			else
 			{
 				mcamera_pose /= track_OK_num;
+				bool need_create_keyframe = false;
 				for (int i = 0; i < mNcameras; i++)
 				{
-					if (mvptrackers[i]->mState != OK)
+					need_create_keyframe |= mvptrackers[i]->setCurrentTrackedPose((mcamera_pose*mvrelative_pose_MulFrameToCameras[i]).inv());
+					std::cout << "set camera " << i << std::endl;					
+				}
+				if (need_create_keyframe)
+				{
+					for (int i = 0; i < mNcameras; i++)
 					{
-						mvptrackers[i]->setCurrentTrackedPose(mcamera_pose*mvrelative_pose_MulFrameToCameras[i]);
-						std::cout << "set camera " << i << std::endl;
+						mvptrackers[i]->CreateNewKeyFrame();
 					}
 				}
 			}
@@ -326,11 +335,11 @@ void MultiFrameTracking::track()
 			}
 			for (int i = 0; i < mNcameras-1; i++)
 			{
-				mvptrackers[i]->mpLastKeyFrame->AddConnection(mvptrackers[i + 1]->mpLastKeyFrame, 3);
+				mvptrackers[i]->mpLastKeyFrame->multiFrame_neighbor = mvptrackers[i + 1]->mpLastKeyFrame;
 				//print_value(mvptrackers[initialized_camera_id]->mpMap->MapPointsInMap());
 			}
 			if (mNcameras>1)
-				mvptrackers[mNcameras - 1]->mpLastKeyFrame->AddConnection(mvptrackers[0]->mpLastKeyFrame,3);
+				mvptrackers[mNcameras - 1]->mpLastKeyFrame->multiFrame_neighbor = mvptrackers[0]->mpLastKeyFrame;
 			//print_value(mvptrackers[initialized_camera_id]->mpMap->MapPointsInMap());
 			mState = OK;
 		}

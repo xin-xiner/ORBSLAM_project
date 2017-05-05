@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 	KinectOfflineReader capture(argv[3]);
 
 	// Create SLAM system. It initializes all system threads and gets ready to process frames.
-	ORB_SLAM2::System SLAM(argv[1], argv[2], ORB_SLAM2::System::MONOCULAR, true);
+	ORB_SLAM2::System SLAM(argv[1], argv[2], ORB_SLAM2::System::RGBD, true);
 
 	
 
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 	// Main loop
 	cv::Mat imRGB, imD, depth8U, cameraPose;
 
-	double frameID = 0;
+	int frameID = 0;
 
 	while (capture.getNextFrame(imD, imRGB))
 	{
@@ -59,8 +59,8 @@ int main(int argc, char **argv)
 #endif
 
 		// Pass the image to the SLAM system
-		//cameraPose = SLAM.TrackRGBD(imRGB, imD, capture.getFrameID());
-		cameraPose = SLAM.TrackMonocular(imRGB,capture.getFrameID());
+		cameraPose = SLAM.TrackRGBD(imRGB, imD, capture.getFrameID());
+		//cameraPose = SLAM.TrackMonocular(imRGB,capture.getFrameID());
 #ifdef COMPILEDWITHC11
 		std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 #else
@@ -68,8 +68,12 @@ int main(int argc, char **argv)
 #endif
 
 		double ttrack = std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
-
-
+		if (SLAM.GetTrackingState() == 3 || (frameID >= 30 && frameID % 30 == 0))
+		{
+			SLAM.SaveMapClouds("pointClouds.vtx");
+			SLAM.SaveTrajectoryVtx("CameraTrajectory.vtx");
+		}
+		frameID++;
 		// Wait to load the next frame
 		cv::waitKey(30);
 	}

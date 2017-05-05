@@ -120,12 +120,16 @@ public:
     bool mbOnlyTracking;
 
     void Reset();
+
+	bool create_new_keyframe = false;
+
 	friend class MultiFrameTracking;
 protected:
 
     // Main tracking function. It is independent of the input sensor.
     void Track();
-	void setCurrentTrackedPose(const cv::Mat& current_pose);
+	void TrackForMultiFrame();
+	bool setCurrentTrackedPose(const cv::Mat& current_pose);
     // Map initialization for stereo and RGB-D
     void StereoInitialization();
 
