@@ -583,7 +583,7 @@ namespace ORB_SLAM2
 		}
 		else
 		{
-			bOK = Relocalization();
+			//bOK = Relocalization();
 		}
 		
 
@@ -1281,7 +1281,7 @@ namespace ORB_SLAM2
 		if (nKFs <= 2)
 			nMinObs = 2;
 		int nRefMatches = mpReferenceKF->TrackedMapPoints(nMinObs);
-		print_value(nRefMatches);
+		//print_value(nRefMatches);
 		// Local Mapping accept keyframes?
 		bool bLocalMappingIdle = mpLocalMapper->AcceptKeyFrames();
 
@@ -1301,10 +1301,10 @@ namespace ORB_SLAM2
 				}
 			}
 		}
-		print_value(nTrackedClose);
-		print_value(nNonTrackedClose);
+		//print_value(nTrackedClose);
+		//print_value(nNonTrackedClose);
 		bool bNeedToInsertClose = (nTrackedClose<100) && (nNonTrackedClose>70);
-		print_value(bNeedToInsertClose);
+		//print_value(bNeedToInsertClose);
 		// Thresholds
 		float thRefRatio = 0.75f;
 		if (nKFs<2)
@@ -1315,18 +1315,18 @@ namespace ORB_SLAM2
 
 		// Condition 1a: More than "MaxFrames" have passed from last keyframe insertion
 		const bool c1a = mCurrentFrame.mnId >= mnLastKeyFrameId + mMaxFrames;
-		print_value(c1a);
+		//print_value(c1a);
 		// Condition 1b: More than "MinFrames" have passed and Local Mapping is idle
 		const bool c1b = (mCurrentFrame.mnId >= mnLastKeyFrameId + mMinFrames && bLocalMappingIdle);
-		print_value(bLocalMappingIdle);
-		print_value(c1b);
+		//print_value(bLocalMappingIdle);
+		//print_value(c1b);
 		//Condition 1c: tracking is weak
 		const bool c1c = mSensor != System::MONOCULAR && (mnMatchesInliers<nRefMatches*0.25 || bNeedToInsertClose);
 
 		// Condition 2: Few tracked points compared to reference keyframe. Lots of visual odometry compared to map matches.
 		const bool c2 = ((mnMatchesInliers<nRefMatches*thRefRatio || bNeedToInsertClose) && mnMatchesInliers>15);
-		print_value(mnMatchesInliers);
-		print_value(c2);
+		//print_value(mnMatchesInliers);
+		//print_value(c2);
 		if ((c1a || c1b || c1c) && c2)
 		{
 			// If the mapping accepts keyframes, insert keyframe.
@@ -1424,11 +1424,11 @@ namespace ORB_SLAM2
 				}
 			}
 		}
-
+		pKF->ChangeParent(mpLastKeyFrame);
 		mpLocalMapper->InsertKeyFrame(pKF);
 
 		mpLocalMapper->SetNotStop(false);
-		pKF->ChangeParent(mpLastKeyFrame);
+		
 		mnLastKeyFrameId = mCurrentFrame.mnId;
 		mpLastKeyFrame = pKF;
 		create_new_keyframe = true;
@@ -1519,8 +1519,14 @@ namespace ORB_SLAM2
 				}
 			}
 		}
-	}
 
+
+
+	}
+	void Tracking::addNeighborTracker(Tracking* tracker)
+	{
+		neighbor_traker.push_back(tracker);
+	}
 
 	void Tracking::UpdateLocalKeyFrames()
 	{
@@ -1543,10 +1549,18 @@ namespace ORB_SLAM2
 				}
 			}
 		}
+		for (int i = 0; i < neighbor_traker.size(); i++)
+		{
+			if (neighbor_traker[i]->mpLastKeyFrame)
+				mvpLocalKeyFrames.push_back(neighbor_traker[i]->mpLastKeyFrame);
+
+		}
 		/*if (mpLastKeyFrame)
 			keyframeCounter[mpLastKeyFrame] += 15;*/
 		if (keyframeCounter.empty())
 			return;
+
+		
 
 		int max = 0;
 		KeyFrame* pKFmax = static_cast<KeyFrame*>(NULL);
@@ -1572,7 +1586,7 @@ namespace ORB_SLAM2
 			pKF->mnTrackReferenceForFrame = mCurrentFrame.mnId;
 		}
 
-
+		
 		// Include also some not-already-included keyframes that are neighbors to already-included keyframes
 		for (vector<KeyFrame*>::const_iterator itKF = mvpLocalKeyFrames.begin(), itEndKF = mvpLocalKeyFrames.end(); itKF != itEndKF; itKF++)
 		{

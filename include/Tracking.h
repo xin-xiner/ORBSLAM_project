@@ -75,7 +75,7 @@ public:
     // Use this function if you have deactivated local mapping and you only want to localize the camera.
     void InformOnlyTracking(const bool &flag);
 
-
+	void addNeighborTracker(Tracking* tracker);
 public:
 
     // Tracking states
@@ -226,6 +226,9 @@ protected:
 
     list<MapPoint*> mlpTemporalPoints;
 
+
+
+	vector<Tracking*> neighbor_traker;
 	
 };
 

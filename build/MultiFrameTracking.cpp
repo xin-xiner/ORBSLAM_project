@@ -40,6 +40,18 @@ MultiFrameTracking::MultiFrameTracking(System* pSys, ORBVocabulary* pVoc, FrameD
 			//pMapDrawer->addDebugCameras(mvrelative_pose_MulFrameToCameras[i], cv::Scalar(0.5, 0.5, 0.5));
 		}
 		//pMapDrawer->addDebugCameras(cv::Mat::eye(4,4,CV_32F), cv::Scalar(0.5, 0.5, 0.5));
+
+		//根据摄像机之间的相邻关系增加连接关系，要求摄像机按照顺时针或逆时针顺序给出
+		//也可以考虑把所有其他相机都添加进去
+		for (int i = 0; i < mvptrackers.size(); i++)
+		{
+			int prev_tracker = i - 1 >= 0 ? i - 1 : mvptrackers.size() - 1;
+			int next_tracker = i + 1 < mvptrackers.size() ? i + 1 : 0;
+			if (i != prev_tracker)
+				mvptrackers[i]->addNeighborTracker(mvptrackers[prev_tracker]);
+			if (i!=next_tracker)
+				mvptrackers[i]->addNeighborTracker(mvptrackers[next_tracker]);
+		}
 		initialize_reference_frames.resize(4, std::vector<Frame>(4));
 	}
 
@@ -97,6 +109,8 @@ void MultiFrameTracking::track()
 			if (track_OK_num == 0)
 			{
 				mState = LOST;
+				std::cout << "Multiframe track fail" << std::endl;
+				cv::waitKey(0);
 			}
 			else
 			{
@@ -255,6 +269,16 @@ void MultiFrameTracking::track()
 			cv::imshow(sst.str(), im);
 		}
 		cv::waitKey(10);
+	}
+
+
+	bool MultiFrameTracking::TrackLocalMap()
+	{
+		for (int i = 0; i < mvptrackers.size(); i++)
+		{
+			mvptrackers[i]->UpdateLocalMap();
+			mvptrackers[i]->SearchLocalPoints();
+		}
 	}
 
 

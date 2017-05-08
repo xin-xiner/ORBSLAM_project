@@ -54,10 +54,10 @@ namespace ORB_SLAM2
 		void MultiFrameInitialization();
 
 
-		private:
+		protected:
 			void transformInitializedTracker(Tracking* tracker, const cv::Mat& transform_to_mulframe);
 
-
+			bool TrackLocalMap();
 
 			public:
 				void SetLocalMapper(LocalMapping *pLocalMapper);
