@@ -96,6 +96,9 @@
     <ProjectReference Include="..\build\ORB_SLAM2.vcxproj">
       <Project>{b0cc9b89-3c54-4aed-a604-bf5a1dee2d56}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Thirdparty\g2o\build\g2o.vcxproj">
+      <Project>{0cc154f4-9b64-4d97-a8c6-aff43ac85fec}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

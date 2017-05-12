@@ -33,6 +33,7 @@ MultiFrameTracking::MultiFrameTracking(System* pSys, ORBVocabulary* pVoc, FrameD
 			t.copyTo(camera_trans(cv::Range(0, 3), cv::Range(3, 4)));
 			//print_mat(camera_trans);
 			mvrelative_pose_MulFrameToCameras.push_back(camera_trans.inv());
+			mvrelative_pose_CamerasToMulFrame.push_back(camera_trans);
 			//print_mat(mvrelative_pose_MulFrameToCameras[i]);
 			mvpFrameDrawer.push_back(new FrameDrawer(pMap));
 			Tracking*  tracker = new Tracking(pSys, pVoc, mvpFrameDrawer[i], pMapDrawer, pMap, pKFDB, strSettingPath, System::MONOCULAR);
@@ -68,7 +69,7 @@ void MultiFrameTracking::track()
 		mLastProcessedState = mState;
 
 		// Get Map Mutex -> Map cannot be changed
-		//unique_lock<mutex> lock(mpMap->mMutexMapUpdate);
+		unique_lock<mutex> lock(mvptrackers[0]->mpMap->mMutexMapUpdate);
 
 		if (mState == NOT_INITIALIZED)
 		{
@@ -82,7 +83,6 @@ void MultiFrameTracking::track()
 				mvpFrameDrawer[i]->Update(mvptrackers[i]);
 				cv::Mat im = mvpFrameDrawer[i]->DrawFrame();
 				std::stringstream sst;
-				sst << "Current Frame " << i;
 				cv::imshow(sst.str(), im);
 			}
 			//cv::waitKey(0);
@@ -92,9 +92,10 @@ void MultiFrameTracking::track()
 		else
 		{
 			//cv::waitKey(0);
-			mcamera_pose = cv::Mat::zeros(4, 4, CV_32F);
+			mcamera_pose = cv::Mat::eye(4, 4, CV_32F);
 			int track_OK_num = 0;
 			int track_OK_ID = -1;
+
 			for (int i = 0; i < mNcameras; i++)
 			{
 				mvptrackers[i]->TrackForMultiFrame();
@@ -109,25 +110,43 @@ void MultiFrameTracking::track()
 			if (track_OK_num == 0)
 			{
 				mState = LOST;
-				std::cout << "Multiframe track fail" << std::endl;
-				cv::waitKey(0);
+				std::cout << "Multiframe track separate fail" << std::endl;
+				//cv::waitKey(0);
 			}
 			else
 			{
 				mcamera_pose /= track_OK_num;
-				bool need_create_keyframe = false;
 				for (int i = 0; i < mNcameras; i++)
 				{
-					need_create_keyframe |= mvptrackers[i]->setCurrentTrackedPose((mcamera_pose*mvrelative_pose_MulFrameToCameras[i]).inv());
-					std::cout << "set camera " << i << std::endl;					
+					mvptrackers[i]->mCurrentFrame.SetPose((mcamera_pose*mvrelative_pose_MulFrameToCameras[i]).inv());
 				}
-				if (need_create_keyframe)
+			}
+
+			{
+				if (TrackLocalMap())
 				{
+					bool need_create_keyframe = false;
 					for (int i = 0; i < mNcameras; i++)
 					{
-						mvptrackers[i]->CreateNewKeyFrame();
+						need_create_keyframe |= mvptrackers[i]->setCurrentTrackedPose((mcamera_pose*mvrelative_pose_MulFrameToCameras[i]).inv());
+						//std::cout << "set camera " << i << std::endl;
+					}
+					if (need_create_keyframe)
+					{
+						for (int i = 0; i < mNcameras; i++)
+						{
+							mvptrackers[i]->CreateNewKeyFrame();
+						}
 					}
 				}
+				else
+				{
+					mState = LOST;
+					std::cout << "Multiframe track fail" << std::endl;
+					cv::waitKey(0);
+				}
+
+				
 			}
 			//	// System is initialized. Track Frame.
 			//	bool bOK;
@@ -274,11 +293,130 @@ void MultiFrameTracking::track()
 
 	bool MultiFrameTracking::TrackLocalMap()
 	{
+		std::vector<Frame*> current_frames(mvptrackers.size());
 		for (int i = 0; i < mvptrackers.size(); i++)
 		{
 			mvptrackers[i]->UpdateLocalMap();
 			mvptrackers[i]->SearchLocalPoints();
+			current_frames[i] = &mvptrackers[i]->mCurrentFrame;
 		}
+		cv::Mat transform_from_mulframe_to_camera = mcamera_pose.inv();
+		Optimizer::PoseOptimizationMultiframe(current_frames, mvrelative_pose_CamerasToMulFrame, transform_from_mulframe_to_camera);
+		mcamera_pose = transform_from_mulframe_to_camera.inv();
+		mnMatchesInliers = 0;
+
+		// Update MapPoints Statistics
+		for (int c = 0; c < current_frames.size(); c++)
+		{
+			Frame& mCurrentFrame = *current_frames[c];
+			for (int i = 0; i<mCurrentFrame.N; i++)
+			{
+				if (mCurrentFrame.mvpMapPoints[i])
+				{
+					if (!mCurrentFrame.mvbOutlier[i])
+					{
+						mCurrentFrame.mvpMapPoints[i]->IncreaseFound();
+						if (mCurrentFrame.mvpMapPoints[i]->Observations()>0)
+							mnMatchesInliers++;
+					}
+				}
+			}
+
+			mvpFrameDrawer[c]->Update(mvptrackers[c]);
+		}
+		//ÎªrelocalizationÔ¤Áô
+		//// Decide if the tracking was succesful
+		//// More restrictive if there was a relocalization recently
+		//if (mCurrentFrame.mnId<mnLastRelocFrameId + mMaxFrames && mnMatchesInliers<50)//original value is 50
+		//	return false;
+		//std::cout << "MultiFrameTracking TrackLocalMap£º ";
+		print_value(mnMatchesInliers);
+		if (mnMatchesInliers<30)//wx-parameter-adjust 2016-12-31 original value is 30
+			return false;
+		else
+			return true;
+
+		
+	}
+
+	bool MultiFrameTracking::TrackReferenceKeyFrame()
+	{
+		std::vector<Frame*> current_frames(mvptrackers.size());
+		int nmatches;
+		for (int i = 0; i < mvptrackers.size(); i++)
+		{
+			nmatches = mvptrackers[i]->prepareForTrackReference();
+			current_frames[i] = &mvptrackers[i]->mCurrentFrame;
+		}
+		cv::Mat transform_from_mulframe_to_camera = mcamera_pose.inv();
+		Optimizer::PoseOptimizationMultiframe(current_frames, mvrelative_pose_CamerasToMulFrame, transform_from_mulframe_to_camera);
+		mcamera_pose = transform_from_mulframe_to_camera.inv();
+		// Discard outliers
+		int nmatchesMap = 0;
+		for (int c = 0; c < current_frames.size(); c++)
+		{
+			Frame& mCurrentFrame = *current_frames[c];
+			for (int i = 0; i < mCurrentFrame.N; i++)
+			{
+				if (mCurrentFrame.mvpMapPoints[i])
+				{
+					if (mCurrentFrame.mvbOutlier[i])
+					{
+						MapPoint* pMP = mCurrentFrame.mvpMapPoints[i];
+
+						mCurrentFrame.mvpMapPoints[i] = static_cast<MapPoint*>(NULL);
+						mCurrentFrame.mvbOutlier[i] = false;
+						pMP->mbTrackInView = false;
+						pMP->mnLastFrameSeen = mCurrentFrame.mnId;
+						nmatches--;
+					}
+					else if (mCurrentFrame.mvpMapPoints[i]->Observations() > 0)
+						nmatchesMap++;
+				}
+			}
+		}
+		//std::cout << "TrackReferenceKeyFrame after optimization" << nmatchesMap << std::endl;
+		return nmatchesMap >= 10;
+	}
+
+	bool MultiFrameTracking::TrackWithMotionModel()
+	{
+		std::vector<Frame*> current_frames(mvptrackers.size());
+		int nmatches;
+		for (int i = 0; i < mvptrackers.size(); i++)
+		{
+			nmatches = mvptrackers[i]->prepareForTrackMotionModel();
+			current_frames[i] = &mvptrackers[i]->mCurrentFrame;
+		}
+		cv::Mat transform_from_mulframe_to_camera = mcamera_pose.inv();
+		Optimizer::PoseOptimizationMultiframe(current_frames, mvrelative_pose_CamerasToMulFrame, transform_from_mulframe_to_camera);
+		mcamera_pose = transform_from_mulframe_to_camera.inv();
+		// Discard outliers
+		int nmatchesMap = 0;
+		for (int c = 0; c < current_frames.size(); c++)
+		{
+			Frame& mCurrentFrame = *current_frames[c];
+			for (int i = 0; i < mCurrentFrame.N; i++)
+			{
+				if (mCurrentFrame.mvpMapPoints[i])
+				{
+					if (mCurrentFrame.mvbOutlier[i])
+					{
+						MapPoint* pMP = mCurrentFrame.mvpMapPoints[i];
+
+						mCurrentFrame.mvpMapPoints[i] = static_cast<MapPoint*>(NULL);
+						mCurrentFrame.mvbOutlier[i] = false;
+						pMP->mbTrackInView = false;
+						pMP->mnLastFrameSeen = mCurrentFrame.mnId;
+						nmatches--;
+					}
+					else if (mCurrentFrame.mvpMapPoints[i]->Observations() > 0)
+						nmatchesMap++;
+				}
+			}
+		}
+		//std::cout << "TrackReferenceKeyFrame after optimization" << nmatchesMap << std::endl;
+		return nmatchesMap >= 10;
 	}
 
 

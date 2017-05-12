@@ -601,7 +601,7 @@ namespace ORB_SLAM2
 			mState = LOST;
 
 		// Update drawer
-		mpFrameDrawer->Update(this);
+		//mpFrameDrawer->Update(this);
 
 		// Reset if the camera get lost soon after initialization
 		if (mState == LOST)
@@ -1051,7 +1051,7 @@ namespace ORB_SLAM2
 		int nmatches = matcher.SearchByBoW(mpReferenceKF, mCurrentFrame, vpMapPointMatches);
 		//std::cout << "TrackReferenceKeyFrame SearchByBoW nmatches: " << nmatches << std::endl;
 		mCurrentFrame.SetPose(mLastFrame.mTcw);//edit-by-wx 2016-12-09 If tracking on reference frame is lost, we still want to try to track on local map. Then the pose must be set.
-		print_mat(mCurrentFrame.mTcw);
+		//print_mat(mCurrentFrame.mTcw);
 		if (nmatches<15)//wx-2016-12-09 original value is 15
 			return false;
 
@@ -1150,6 +1150,53 @@ namespace ORB_SLAM2
 		}
 	}
 
+	int Tracking::prepareForTrackMotionModel()
+	{
+		ORBmatcher matcher(0.9, true);
+
+		// Update last frame pose according to its reference keyframe
+		// Create "visual odometry" points
+		UpdateLastFrame();
+
+		mCurrentFrame.SetPose(mVelocity*mLastFrame.mTcw);
+		//print_mat(mCurrentFrame.mTcw);
+		fill(mCurrentFrame.mvpMapPoints.begin(), mCurrentFrame.mvpMapPoints.end(), static_cast<MapPoint*>(NULL));
+
+		// Project points seen in previous frame
+		int th;
+		if (mSensor != System::STEREO)
+			th = 15;
+		else
+			th = 7;
+		int nmatches = matcher.SearchByProjection(mCurrentFrame, mLastFrame, th, mSensor == System::MONOCULAR);
+
+		// If few matches, uses a wider window search
+		if (nmatches<20)
+		{
+			fill(mCurrentFrame.mvpMapPoints.begin(), mCurrentFrame.mvpMapPoints.end(), static_cast<MapPoint*>(NULL));
+			nmatches = matcher.SearchByProjection(mCurrentFrame, mLastFrame, 2 * th, mSensor == System::MONOCULAR);
+		}
+		return nmatches;
+	}
+	int Tracking::prepareForTrackReference()
+	{
+		// Compute Bag of Words vector
+		mCurrentFrame.ComputeBoW();
+
+		// We perform first an ORB matching with the reference keyframe
+		// If enough matches are found we setup a PnP solver
+		ORBmatcher matcher(0.7, true);
+		vector<MapPoint*> vpMapPointMatches;
+
+		int nmatches = matcher.SearchByBoW(mpReferenceKF, mCurrentFrame, vpMapPointMatches);
+		//std::cout << "TrackReferenceKeyFrame SearchByBoW nmatches: " << nmatches << std::endl;
+		mCurrentFrame.SetPose(mLastFrame.mTcw);//edit-by-wx 2016-12-09 If tracking on reference frame is lost, we still want to try to track on local map. Then the pose must be set.
+
+		mCurrentFrame.mvpMapPoints = vpMapPointMatches;
+		mCurrentFrame.SetPose(mLastFrame.mTcw);
+		return nmatches;
+	}
+
 	bool Tracking::TrackWithMotionModel()
 	{
 		ORBmatcher matcher(0.9, true);
@@ -1159,7 +1206,7 @@ namespace ORB_SLAM2
 		UpdateLastFrame();
 
 		mCurrentFrame.SetPose(mVelocity*mLastFrame.mTcw);
-		print_mat(mCurrentFrame.mTcw);
+		//print_mat(mCurrentFrame.mTcw);
 		fill(mCurrentFrame.mvpMapPoints.begin(), mCurrentFrame.mvpMapPoints.end(), static_cast<MapPoint*>(NULL));
 
 		// Project points seen in previous frame

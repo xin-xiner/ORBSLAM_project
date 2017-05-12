@@ -33,6 +33,7 @@
 #include "Converter.h"
 
 #include<mutex>
+#include "MultiFrameTracking\debug_utils.h"
 
 namespace ORB_SLAM2
 {
@@ -449,6 +450,177 @@ int Optimizer::PoseOptimization(Frame *pFrame)
 
     return nInitialCorrespondences-nBad;
 }
+
+
+int Optimizer::PoseOptimizationMultiframe(std::vector<Frame*> pFrames,std::vector<cv::Mat> relative_pose_from_camera_to_mulframe,cv::Mat& multiFrame_pose)
+{
+	g2o::SparseOptimizer optimizer;
+	g2o::BlockSolver_6_3::LinearSolverType * linearSolver;
+
+	linearSolver = new g2o::LinearSolverDense<g2o::BlockSolver_6_3::PoseMatrixType>();
+
+	g2o::BlockSolver_6_3 * solver_ptr = new g2o::BlockSolver_6_3(linearSolver);
+
+	g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+	optimizer.setAlgorithm(solver);
+
+	int nInitialCorrespondences = 0;
+
+	// Set Frame vertex
+	g2o::VertexSE3Expmap * vSE3 = new g2o::VertexSE3Expmap();
+	print_mat(multiFrame_pose);
+	vSE3->setEstimate(Converter::toSE3Quat(multiFrame_pose));
+	vSE3->setId(0);
+	vSE3->setFixed(false);
+	optimizer.addVertex(vSE3);
+	const float deltaMono = sqrt(5.991);
+	const float deltaStereo = sqrt(7.815);
+
+
+	int sum_pMp = 0;
+	std::vector<Eigen::Matrix4d> relative_pose(4);
+	for (int f = 0; f < pFrames.size(); f++)
+	{
+		sum_pMp += pFrames[f]->N;
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+			{
+				relative_pose[f](i, j) = relative_pose_from_camera_to_mulframe[f].at<float>(i, j);
+			}
+	}
+
+	vector<g2o::EdgeMultiFrameSE3ProjectXYZOnlyPose*> vpEdgesMono;
+	vector<size_t> vnIndexEdgeMono;
+	vector<size_t> vnIndex_frame_EdgeMono;
+	vpEdgesMono.reserve(sum_pMp);
+	vnIndexEdgeMono.reserve(sum_pMp);
+	unique_lock<mutex> lock(MapPoint::mGlobalMutex);
+	for (int f = 0; f < pFrames.size(); f++)
+	{
+		Frame* pFrame = pFrames[f];
+		// Set MapPoint vertices
+		const int N = pFrame->N;
+
+		for (int i = 0; i<N; i++)
+		{
+			MapPoint* pMP = pFrame->mvpMapPoints[i];
+			if (pMP)
+			{
+				nInitialCorrespondences++;
+				pFrame->mvbOutlier[i] = false;
+
+				Eigen::Matrix<double, 2, 1> obs;
+				const cv::KeyPoint &kpUn = pFrame->mvKeysUn[i];
+				obs << kpUn.pt.x, kpUn.pt.y;
+
+				g2o::EdgeMultiFrameSE3ProjectXYZOnlyPose* e = new g2o::EdgeMultiFrameSE3ProjectXYZOnlyPose();
+
+				e->setVertex(0, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(0)));
+				e->setMeasurement(obs);
+				const float invSigma2 = pFrame->mvInvLevelSigma2[kpUn.octave];
+				e->setInformation(Eigen::Matrix2d::Identity()*invSigma2);
+
+				g2o::RobustKernelHuber* rk = new g2o::RobustKernelHuber;
+				e->setRobustKernel(rk);
+				rk->setDelta(deltaMono);
+
+				e->fx = pFrame->fx;
+				e->fy = pFrame->fy;
+				e->cx = pFrame->cx;
+				e->cy = pFrame->cy;
+				cv::Mat Xw = pMP->GetWorldPos();
+				e->Xw[0] = Xw.at<float>(0);
+				e->Xw[1] = Xw.at<float>(1);
+				e->Xw[2] = Xw.at<float>(2);
+				e->set_RelativePose_camera_to_Mulframe(relative_pose[f]);
+
+
+				optimizer.addEdge(e);
+
+				vpEdgesMono.push_back(e);
+				vnIndex_frame_EdgeMono.push_back(f);
+				vnIndexEdgeMono.push_back(i);
+			}
+
+		}
+	}
+
+	if (nInitialCorrespondences<3)
+		return 0;
+
+	// We perform 4 optimizations, after each optimization we classify observation as inlier/outlier
+	// At the next optimization, outliers are not included, but at the end they can be classified as inliers again.
+	const float chi2Mono[4] = { 10.991, 10.991, 10.991, 10.991 };
+	const int its[4] = { 10, 10, 10, 10 };
+
+	int nBad = 0;
+	for (size_t it = 0; it<4; it++)
+	{
+
+		vSE3->setEstimate(Converter::toSE3Quat(multiFrame_pose));
+		optimizer.initializeOptimization(0);
+		optimizer.optimize(its[it]);
+
+		nBad = 0;
+		for (size_t i = 0, iend = vpEdgesMono.size(); i<iend; i++)
+		{
+			g2o::EdgeMultiFrameSE3ProjectXYZOnlyPose* e = vpEdgesMono[i];
+
+			const size_t idx = vnIndexEdgeMono[i];
+			const size_t idx_frame = vnIndex_frame_EdgeMono[i];
+			if (pFrames[idx_frame]->mvbOutlier[idx])
+			{
+				e->computeError();
+				//print_value(e->error());
+			}
+
+			const float chi2 = e->chi2();
+
+			if (chi2>chi2Mono[it])
+			{
+				pFrames[idx_frame]->mvbOutlier[idx] = true;
+				e->setLevel(1);
+				nBad++;
+			}
+			else
+			{
+				pFrames[idx_frame]->mvbOutlier[idx] = false;
+				e->setLevel(0);
+			}
+
+			if (it == 2)
+				e->setRobustKernel(0);
+		}
+
+
+		if (optimizer.edges().size()<10)
+			break;
+	}
+
+	// Recover optimized pose and return number of inliers
+	g2o::VertexSE3Expmap* vSE3_recov = static_cast<g2o::VertexSE3Expmap*>(optimizer.vertex(0));
+	g2o::SE3Quat SE3quat_recov = vSE3_recov->estimate();
+	cv::Mat pose = Converter::toCvMat(SE3quat_recov);
+	multiFrame_pose = pose;
+	//print_mat(multiFrame_pose);
+	for (int i = 0; i < pFrames.size(); i++)
+	{
+		cv::Mat pose_camera = relative_pose_from_camera_to_mulframe[i]*pose;
+		//print_mat(pose);
+		//print_mat(relative_pose_from_camera_to_mulframe[i]);
+		//print_mat(pose_camera);
+		pFrames[i]->SetPose(pose_camera);
+	}
+	
+	//print_value(nInitialCorrespondences);
+	//print_value(nBad);
+	//print_value(nInitialCorrespondences - nBad);
+	return nInitialCorrespondences - nBad;
+}
+
+
+
+
 
 void Optimizer::LocalBundleAdjustment(KeyFrame *pKF, bool* pbStopFlag, Map* pMap)
 {    

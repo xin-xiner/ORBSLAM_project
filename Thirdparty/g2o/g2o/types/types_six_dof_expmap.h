@@ -165,7 +165,6 @@ public:
   virtual void linearizeOplus();
 
   Vector2d cam_project(const Vector3d & trans_xyz) const;
-
   Vector3d Xw;
   double fx, fy, cx, cy;
 };
@@ -200,6 +199,32 @@ public:
   Vector3d Xw;
   double fx, fy, cx, cy, bf;
 };
+
+
+
+class  EdgeMultiFrameSE3ProjectXYZOnlyPose : public  BaseUnaryEdge<2, Vector2d, VertexSE3Expmap>{
+public:
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+	EdgeMultiFrameSE3ProjectXYZOnlyPose();
+	bool read(std::istream& is);
+
+	bool write(std::ostream& os) const;
+	void computeError();
+
+	bool isDepthPositive();
+
+	virtual void linearizeOplus();
+
+	Vector4d Xw;
+	double fx, fy, cx, cy;
+	Eigen::Vector4d point_in_camera_coordinate;
+	Vector2d cam_project(const Vector3d & trans_xyz) const;
+	void set_RelativePose_camera_to_Mulframe(Eigen::Matrix4d& p);
+	Eigen::Matrix4d relativePose_camera_to_Mulframe;
+	double R[4][4];
+};
+
 
 
 

@@ -229,7 +229,8 @@ protected:
 
 
 	vector<Tracking*> neighbor_traker;
-	
+	int prepareForTrackMotionModel();
+	int prepareForTrackReference();
 };
 
 } //namespace ORB_SLAM

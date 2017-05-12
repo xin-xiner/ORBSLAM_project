@@ -287,6 +287,82 @@ void EdgeSE3ProjectXYZOnlyPose::linearizeOplus() {
   _jacobianOplusXi(1,5) = y*invz_2 *fy;
 }
 
+void EdgeMultiFrameSE3ProjectXYZOnlyPose::linearizeOplus() {
+	VertexSE3Expmap * vi = static_cast<VertexSE3Expmap *>(_vertices[0]);
+	Vector3d xyz_trans = vi->estimate().map(Xw.block(0,0,3,1));
+
+	double x = xyz_trans[0];
+	double y = xyz_trans[1];
+	double z = xyz_trans[2];
+	double invz = 1.0 / xyz_trans[2];
+	double invz_2 = invz*invz;
+	double x_2 = x*x;
+	double y_2 = y*y;
+	double z_2 = z*z;
+	double fx_invz_2 = fx*invz_2;
+	double fy_invz_2 = fy*invz_2;
+
+	_jacobianOplusXi(0, 0) = fx_invz_2*(z_2* R[1][1] + x* y* R[2][2] - z*(x* R[2][1] + y* R[2][2]));
+	_jacobianOplusXi(0, 1) = fx_invz_2*(-z_2* R[0][0] - x_2* R[2][2] + x* z*(R[2][0] + R[2][2]));
+	_jacobianOplusXi(0, 2) = fx_invz_2*(y* z* R[0][0] - x *z*R[1][1] - x* y* R[2][0] + x_2* R[2][1]);
+	_jacobianOplusXi(0, 3) = fx_invz_2*(-z* R[0][0] + x* R[2][0]);
+	_jacobianOplusXi(0, 4) = fx_invz_2*(-z* R[1][1] + x* R[2][1]);
+	_jacobianOplusXi(0, 5) = fx_invz_2*(x - z)* R[2][2];
+
+	_jacobianOplusXi(1, 0) = fy_invz_2*(z_2* R[1][1] - y* z*(R[1][2] + R[2][1]) + y_2* R[2][2]);
+	_jacobianOplusXi(1, 1) = fy_invz_2*(-z_2* R[1][0] + x*z* R[1][2] + y* z* R[2][0] - x* y* R[2][2]);
+	_jacobianOplusXi(1, 2) = fy_invz_2*(y* z* R[1][0] - x*z* R[1][1] - y_2* R[2][0] + x*y* R[2][1]);
+	_jacobianOplusXi(1, 3) = fy_invz_2*(-z* R[1][0] + y* R[2][0]);
+	_jacobianOplusXi(1, 4) = fy_invz_2*(-z* R[1][1] + y* R[2][1]);
+	_jacobianOplusXi(1, 5) = fy_invz_2*(-z* R[1][2] + y* R[2][2]);
+}
+
+EdgeMultiFrameSE3ProjectXYZOnlyPose::EdgeMultiFrameSE3ProjectXYZOnlyPose(){
+	Xw[3] = 1;
+	relativePose_camera_to_Mulframe = Eigen::Matrix4d::Identity();
+}
+
+void EdgeMultiFrameSE3ProjectXYZOnlyPose::computeError()  {
+	const VertexSE3Expmap* v1 = static_cast<const VertexSE3Expmap*>(_vertices[0]);
+	Vector2d obs(_measurement);
+	//std::cout << "measurement " << obs << std::endl;
+	Eigen::Matrix4d transform_to_camera_coordinate = relativePose_camera_to_Mulframe*v1->estimate().to_homogeneous_matrix();
+	//std::cout << "relativePose_camera_to_Mulframe " << std::endl << relativePose_camera_to_Mulframe << std::endl;
+	point_in_camera_coordinate = transform_to_camera_coordinate*Xw;
+	//std::cout << "point_in_camera_coordinate " << std::endl << point_in_camera_coordinate << std::endl;
+	//std::cout << "point_in_camera_coordinate.block(0,0,3,1) " << std::endl << point_in_camera_coordinate.block(0, 0, 3, 1) << std::endl;
+	_error = obs - cam_project(point_in_camera_coordinate.block(0, 0, 3, 1));
+	//std::cout << "cam_project " << std::endl << cam_project(point_in_camera_coordinate.block(0, 0, 3, 1)) << std::endl;
+	//std::cout << "error " << _error << std::endl;
+}
+
+bool EdgeMultiFrameSE3ProjectXYZOnlyPose::isDepthPositive() {
+	const VertexSE3Expmap* v1 = static_cast<const VertexSE3Expmap*>(_vertices[0]);
+	Eigen::Matrix4d transform_to_camera_coordinate = relativePose_camera_to_Mulframe*v1->estimate().to_homogeneous_matrix();
+	point_in_camera_coordinate = transform_to_camera_coordinate*Xw;
+	return point_in_camera_coordinate(2)>0.0;
+}
+
+void EdgeMultiFrameSE3ProjectXYZOnlyPose::set_RelativePose_camera_to_Mulframe(Eigen::Matrix4d& p)
+{
+	//relativePose_camera_to_Mulframe = p;
+	
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+		{
+			relativePose_camera_to_Mulframe(i, j) = p(i, j);
+			R[i][j] = p(i, j);
+		}
+}
+
+Vector2d EdgeMultiFrameSE3ProjectXYZOnlyPose::cam_project(const Vector3d & trans_xyz) const{
+	Vector2d proj = project2d(trans_xyz);
+	Vector2d res;
+	res[0] = proj[0] * fx + cx;
+	res[1] = proj[1] * fy + cy;
+	return res;
+}
+
 Vector2d EdgeSE3ProjectXYZOnlyPose::cam_project(const Vector3d & trans_xyz) const{
   Vector2d proj = project2d(trans_xyz);
   Vector2d res;
@@ -296,6 +372,31 @@ Vector2d EdgeSE3ProjectXYZOnlyPose::cam_project(const Vector3d & trans_xyz) cons
 }
 
 
+bool EdgeMultiFrameSE3ProjectXYZOnlyPose::read(std::istream& is){
+	for (int i = 0; i<2; i++){
+		is >> _measurement[i];
+	}
+	for (int i = 0; i<2; i++)
+		for (int j = i; j<2; j++) {
+			is >> information()(i, j);
+			if (i != j)
+				information()(j, i) = information()(i, j);
+		}
+	return true;
+}
+
+bool EdgeMultiFrameSE3ProjectXYZOnlyPose::write(std::ostream& os) const {
+
+	for (int i = 0; i<2; i++){
+		os << measurement()[i] << " ";
+	}
+
+	for (int i = 0; i<2; i++)
+		for (int j = i; j<2; j++){
+			os << " " << information()(i, j);
+		}
+	return os.good();
+}
 Vector3d EdgeStereoSE3ProjectXYZOnlyPose::cam_project(const Vector3d & trans_xyz) const{
   const float invz = 1.0f/trans_xyz[2];
   Vector3d res;

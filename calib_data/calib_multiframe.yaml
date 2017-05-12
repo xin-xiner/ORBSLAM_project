@@ -63,7 +63,7 @@ camera3.C: [1.40618, 4.45921, 1.01059]
 #--------------------------------------------------------------------------------------------
 Viewer.KeyFrameSize: 0.05
 Viewer.KeyFrameLineWidth: 3
-Viewer.GraphLineWidth: 0.9
+Viewer.GraphLineWidth: 2
 Viewer.PointSize:2
 Viewer.CameraSize: 0.08
 Viewer.CameraLineWidth: 3

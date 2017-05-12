@@ -658,6 +658,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="MultiFrameTracking.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Thirdparty\g2o\build\g2o.vcxproj">
+      <Project>{0cc154f4-9b64-4d97-a8c6-aff43ac85fec}</Project>
+    </ProjectReference>
     <ProjectReference Include="E:/ORB_SLAM2-master/build/ZERO_CHECK.vcxproj">
       <Project>9549D833-8EA1-47E1-A39F-D05099C163BF</Project>
     </ProjectReference>
