@@ -40,6 +40,7 @@ MultiFrameTracking::MultiFrameTracking(System* pSys, ORBVocabulary* pVoc, FrameD
 			mvptrackers.push_back(tracker);
 			//pMapDrawer->addDebugCameras(mvrelative_pose_MulFrameToCameras[i], cv::Scalar(0.5, 0.5, 0.5));
 		}
+		mpMapDrawer = pMapDrawer;
 		//pMapDrawer->addDebugCameras(cv::Mat::eye(4,4,CV_32F), cv::Scalar(0.5, 0.5, 0.5));
 
 		//根据摄像机之间的相邻关系增加连接关系，要求摄像机按照顺时针或逆时针顺序给出
@@ -59,6 +60,12 @@ MultiFrameTracking::MultiFrameTracking(System* pSys, ORBVocabulary* pVoc, FrameD
 
 void MultiFrameTracking::track()
 	{
+		for (int i = 0; i < mNcameras; i++)
+		{
+			std::stringstream sst;
+			sst << "Current Frame " << i;
+			cv::namedWindow(sst.str(), 0);
+		}
 		if (mState == NO_IMAGES_YET)
 		{
 			mState = NOT_INITIALIZED;
@@ -70,218 +77,96 @@ void MultiFrameTracking::track()
 
 		// Get Map Mutex -> Map cannot be changed
 		unique_lock<mutex> lock(mvptrackers[0]->mpMap->mMutexMapUpdate);
-
+		bool bOK;
 		if (mState == NOT_INITIALIZED)
 		{
 
 			MultiFrameInitialization();
-
-			//mpFrameDrawer->Update(this);
-
 			for (int i = 0; i < mNcameras; i++)
 			{
 				mvpFrameDrawer[i]->Update(mvptrackers[i]);
 				cv::Mat im = mvpFrameDrawer[i]->DrawFrame();
 				std::stringstream sst;
+				sst << "Current Frame " << i;
+				cv::namedWindow(sst.str(),0);
 				cv::imshow(sst.str(), im);
 			}
+			//mpFrameDrawer->Update(this);
 			//cv::waitKey(0);
 			if (mState != OK)
 				return;
 		}
 		else
 		{
-			//cv::waitKey(0);
-			mcamera_pose = cv::Mat::eye(4, 4, CV_32F);
-			int track_OK_num = 0;
-			int track_OK_ID = -1;
+			cv::waitKey(0);
+			
+			create_new_keyframe = false;
+			if (mState == OK)
+			{
+				// Local Mapping might have changed some MapPoints tracked in last frame
+				CheckReplacedInLastFrame();
 
-			for (int i = 0; i < mNcameras; i++)
-			{
-				mvptrackers[i]->TrackForMultiFrame();
-				if (mvptrackers[i]->mState == OK)
+				if (mVelocity.empty())// || mCurrentFrame.mnId<mnLastRelocFrameId + 2)
 				{
-					track_OK_num++;
-					track_OK_ID = i;
-					mcamera_pose += mvptrackers[i]->mCurrentFrame.mTcw.inv()*mvrelative_pose_MulFrameToCameras[i].inv();
-				}
-			}
-			print_value(track_OK_num);
-			if (track_OK_num == 0)
-			{
-				mState = LOST;
-				std::cout << "Multiframe track separate fail" << std::endl;
-				//cv::waitKey(0);
-			}
-			else
-			{
-				mcamera_pose /= track_OK_num;
-				for (int i = 0; i < mNcameras; i++)
-				{
-					mvptrackers[i]->mCurrentFrame.SetPose((mcamera_pose*mvrelative_pose_MulFrameToCameras[i]).inv());
-				}
-			}
-
-			{
-				if (TrackLocalMap())
-				{
-					bool need_create_keyframe = false;
-					for (int i = 0; i < mNcameras; i++)
-					{
-						need_create_keyframe |= mvptrackers[i]->setCurrentTrackedPose((mcamera_pose*mvrelative_pose_MulFrameToCameras[i]).inv());
-						//std::cout << "set camera " << i << std::endl;
-					}
-					if (need_create_keyframe)
-					{
-						for (int i = 0; i < mNcameras; i++)
-						{
-							mvptrackers[i]->CreateNewKeyFrame();
-						}
-					}
+					bOK = TrackReferenceKeyFrame();
 				}
 				else
 				{
-					mState = LOST;
-					std::cout << "Multiframe track fail" << std::endl;
-					cv::waitKey(0);
+					bOK = TrackWithMotionModel();
+					if (!bOK)
+						bOK = TrackReferenceKeyFrame();
 				}
+			}
+			else
+			{
+				//bOK = Relocalization();
+			}
+
+			for (int c = 0; c < mvptrackers.size(); c++)
+			{
+				mvptrackers[c]->mCurrentFrame.mpReferenceKF = mvptrackers[c]->mpReferenceKF;
+			}
+			bOK |= TrackLocalMap();
+			if (bOK)
+			{
+				bool need_create_keyframe = false;
+				for (int i = 0; i < mNcameras; i++)
+				{
+					need_create_keyframe |= mvptrackers[i]->setCurrentTrackedPose((mcamera_pose*mvrelative_pose_MulFrameToCameras[i]).inv());
+					//std::cout << "set camera " << i << std::endl;
+				}
+				if (need_create_keyframe)
+				{
+					for (int i = 0; i < mNcameras; i++)
+					{
+						//std::stringstream sst;
+						/*sst << "Current Frame " << i;
+						std::cout << sst.str() << std::endl;
+						std::cout << "before "<<std::endl << mvptrackers[i]->mpReferenceKF->GetPose()<<std::endl;*/
+						mvptrackers[i]->CreateNewKeyFrame();
+						
+						//std::cout <<"after "<<std::endl<< mvptrackers[i]->mpReferenceKF->GetPose()<<std::endl;
+					}
+				}
+				if (!last_camera_pose.empty())
+				{
+					mVelocity = mcamera_pose*last_camera_pose.inv();
+				}
+				mcamera_pose.copyTo(last_camera_pose);
+				mpMapDrawer->SetCurrentCameraPose(mcamera_pose.inv());
+			}
+			else
+			{
+				mState = LOST;
+				std::cout << "Multiframe track fail" << std::endl;
+				cv::waitKey(0);
+			}
 
 				
-			}
-			//	// System is initialized. Track Frame.
-			//	bool bOK;
-
-			//	// Local Mapping is activated. This is the normal behaviour, unless
-			//	// you explicitly activate the "only tracking" mode.
-
-							//if (mState == OK)
-							//{
-							//	// Local Mapping might have changed some MapPoints tracked in last frame
-							//	CheckReplacedInLastFrame();
-			
-							//	if (mVelocity.empty() || mCurrentFrame.mnId<mnLastRelocFrameId + 2)
-							//	{
-							//		bOK = TrackReferenceKeyFrame();
-							//	}
-							//	else
-							//	{
-							//		bOK = TrackWithMotionModel();
-							//		if (!bOK)
-							//			bOK = TrackReferenceKeyFrame();
-							//	}
-							//}
-			//				else
-			//				{
-			//					bOK = Relocalization();
-			//				}
-			//		
-			//
-			//				mCurrentFrame.mpReferenceKF = mpReferenceKF;
-			//
-			//				// If we have an initial estimation of the camera pose and matching. Track the local map.
-			//
-			//					//std::cout << "tracking statue reference frame: " << bOK << std::endl;
-			//				if (bOK)
-			//					bOK = TrackLocalMap();
-			//
-			//
-			//
-			//				if (bOK)
-			//					mState = OK;
-			//				else
-			//					mState = LOST;
-			//
-			//				// Update drawer
-			//				mpFrameDrawer->Update(this);
-			////****************************************************************add keyframe
-			//				// If tracking were good, check if we insert a keyframe
-			//				if (bOK)
-			//				{
-			//					// Update motion model
-			//					if (!mLastFrame.mTcw.empty())
-			//					{
-			//						cv::Mat LastTwc = cv::Mat::eye(4, 4, CV_32F);
-			//						mLastFrame.GetRotationInverse().copyTo(LastTwc.rowRange(0, 3).colRange(0, 3));
-			//						mLastFrame.GetCameraCenter().copyTo(LastTwc.rowRange(0, 3).col(3));
-			//						mVelocity = mCurrentFrame.mTcw*LastTwc;
-			//					}
-			//					else
-			//						mVelocity = cv::Mat();
-			//
-			//					mpMapDrawer->SetCurrentCameraPose(mCurrentFrame.mTcw);
-			//
-			//					// Clean temporal point matches
-			//					for (int i = 0; i<mCurrentFrame.N; i++)
-			//					{
-			//						MapPoint* pMP = mCurrentFrame.mvpMapPoints[i];
-			//						if (pMP)
-			//							if (pMP->Observations()<1)
-			//							{
-			//								mCurrentFrame.mvbOutlier[i] = false;
-			//								mCurrentFrame.mvpMapPoints[i] = static_cast<MapPoint*>(NULL);
-			//							}
-			//					}
-			//
-			//					// Delete temporal MapPoints
-			//					for (list<MapPoint*>::iterator lit = mlpTemporalPoints.begin(), lend = mlpTemporalPoints.end(); lit != lend; lit++)
-			//					{
-			//						MapPoint* pMP = *lit;
-			//						delete pMP;
-			//					}
-			//					mlpTemporalPoints.clear();
-			//
-			//					// Check if we need to insert a new keyframe
-			//					if (NeedNewKeyFrame())
-			//						CreateNewKeyFrame();
-			//
-			//					// We allow points with high innovation (considererd outliers by the Huber Function)
-			//					// pass to the new keyframe, so that bundle adjustment will finally decide
-			//					// if they are outliers or not. We don't want next frame to estimate its position
-			//					// with those points so we discard them in the frame.
-			//					for (int i = 0; i<mCurrentFrame.N; i++)
-			//					{
-			//						if (mCurrentFrame.mvpMapPoints[i] && mCurrentFrame.mvbOutlier[i])
-			//							mCurrentFrame.mvpMapPoints[i] = static_cast<MapPoint*>(NULL);
-			//					}
-			//				}
-			//
-			//				// Reset if the camera get lost soon after initialization
-			//				if (mState == LOST)
-			//				{
-			//					if (mpMap->KeyFramesInMap() <= 5)
-			//					{
-			//						cout << "Track lost soon after initialisation, reseting..." << endl;
-			//						mpSystem->Reset();
-			//						return;
-			//					}
-			//				}
-			//
-			//				if (!mCurrentFrame.mpReferenceKF)
-			//					mCurrentFrame.mpReferenceKF = mpReferenceKF;
-			//
-			//				mLastFrame = Frame(mCurrentFrame);
-			//			}
-			//			//**********************************************************************************
-			//			// Store frame pose information to retrieve the complete camera trajectory afterwards.
-			//			if (!mCurrentFrame.mTcw.empty())
-			//			{
-			//				cv::Mat Tcr = mCurrentFrame.mTcw*mCurrentFrame.mpReferenceKF->GetPoseInverse();
-			//				mlRelativeFramePoses.push_back(Tcr);
-			//				mlpReferences.push_back(mpReferenceKF);
-			//				mlFrameTimes.push_back(mCurrentFrame.mTimeStamp);
-			//				mlbLost.push_back(mState == LOST);
-			//			}
-			//			else
-			//			{
-			//				// This can happen if tracking is lost
-			//				mlRelativeFramePoses.push_back(mlRelativeFramePoses.back());
-			//				mlpReferences.push_back(mlpReferences.back());
-			//				mlFrameTimes.push_back(mlFrameTimes.back());
-			//				mlbLost.push_back(mState == LOST);
-			//			}
 		}
 		for (int i = 0; i < mNcameras; i++)
 		{
+			mvpFrameDrawer[i]->Update(mvptrackers[i]);
 			cv::Mat im = mvpFrameDrawer[i]->DrawFrame();
 			std::stringstream sst;
 			sst << "Current Frame " << i;
@@ -309,6 +194,7 @@ void MultiFrameTracking::track()
 		for (int c = 0; c < current_frames.size(); c++)
 		{
 			Frame& mCurrentFrame = *current_frames[c];
+			mvptrackers[c]->mnMatchesInliers = 0;
 			for (int i = 0; i<mCurrentFrame.N; i++)
 			{
 				if (mCurrentFrame.mvpMapPoints[i])
@@ -316,8 +202,11 @@ void MultiFrameTracking::track()
 					if (!mCurrentFrame.mvbOutlier[i])
 					{
 						mCurrentFrame.mvpMapPoints[i]->IncreaseFound();
-						if (mCurrentFrame.mvpMapPoints[i]->Observations()>0)
+						if (mCurrentFrame.mvpMapPoints[i]->Observations() > 0)
+						{
 							mnMatchesInliers++;
+							mvptrackers[c]->mnMatchesInliers++;
+						}
 					}
 				}
 			}
@@ -329,7 +218,7 @@ void MultiFrameTracking::track()
 		//// More restrictive if there was a relocalization recently
 		//if (mCurrentFrame.mnId<mnLastRelocFrameId + mMaxFrames && mnMatchesInliers<50)//original value is 50
 		//	return false;
-		//std::cout << "MultiFrameTracking TrackLocalMap： ";
+		std::cout << "MultiFrameTracking TrackLocalMap： ";
 		print_value(mnMatchesInliers);
 		if (mnMatchesInliers<30)//wx-parameter-adjust 2016-12-31 original value is 30
 			return false;
@@ -342,10 +231,10 @@ void MultiFrameTracking::track()
 	bool MultiFrameTracking::TrackReferenceKeyFrame()
 	{
 		std::vector<Frame*> current_frames(mvptrackers.size());
-		int nmatches;
+		int nmatches = 0;
 		for (int i = 0; i < mvptrackers.size(); i++)
 		{
-			nmatches = mvptrackers[i]->prepareForTrackReference();
+			nmatches += mvptrackers[i]->prepareForTrackReference();
 			current_frames[i] = &mvptrackers[i]->mCurrentFrame;
 		}
 		cv::Mat transform_from_mulframe_to_camera = mcamera_pose.inv();
@@ -375,17 +264,18 @@ void MultiFrameTracking::track()
 				}
 			}
 		}
-		//std::cout << "TrackReferenceKeyFrame after optimization" << nmatchesMap << std::endl;
+		std::cout << "TrackReferenceKeyFrame after optimization" << nmatches << std::endl;
 		return nmatchesMap >= 10;
 	}
 
 	bool MultiFrameTracking::TrackWithMotionModel()
 	{
 		std::vector<Frame*> current_frames(mvptrackers.size());
-		int nmatches;
+		int nmatches = 0;
+		mcamera_pose = mVelocity*last_camera_pose;
 		for (int i = 0; i < mvptrackers.size(); i++)
 		{
-			nmatches = mvptrackers[i]->prepareForTrackMotionModel();
+			nmatches += mvptrackers[i]->prepareForTrackMotionModel();
 			current_frames[i] = &mvptrackers[i]->mCurrentFrame;
 		}
 		cv::Mat transform_from_mulframe_to_camera = mcamera_pose.inv();
@@ -415,11 +305,15 @@ void MultiFrameTracking::track()
 				}
 			}
 		}
-		//std::cout << "TrackReferenceKeyFrame after optimization" << nmatchesMap << std::endl;
+		std::cout << "TrackWithMotionModel after optimization" << nmatches << std::endl;
 		return nmatchesMap >= 10;
 	}
 
-
+	void MultiFrameTracking::CheckReplacedInLastFrame()
+	{
+		for (int i = 0; i<mvptrackers.size(); i++)
+			mvptrackers[i]->CheckReplacedInLastFrame();
+	}
 	cv::Mat MultiFrameTracking::GrabImageMultiFrame(const std::vector<cv::Mat> &ims, const double &timestamp)
 	{
 		for (int i = 0; i < mNcameras; i++)

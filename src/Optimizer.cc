@@ -468,7 +468,7 @@ int Optimizer::PoseOptimizationMultiframe(std::vector<Frame*> pFrames,std::vecto
 
 	// Set Frame vertex
 	g2o::VertexSE3Expmap * vSE3 = new g2o::VertexSE3Expmap();
-	print_mat(multiFrame_pose);
+	//print_mat(multiFrame_pose);
 	vSE3->setEstimate(Converter::toSE3Quat(multiFrame_pose));
 	vSE3->setId(0);
 	vSE3->setFixed(false);
@@ -544,13 +544,13 @@ int Optimizer::PoseOptimizationMultiframe(std::vector<Frame*> pFrames,std::vecto
 
 		}
 	}
-
+	print_value(nInitialCorrespondences);
 	if (nInitialCorrespondences<3)
 		return 0;
 
 	// We perform 4 optimizations, after each optimization we classify observation as inlier/outlier
 	// At the next optimization, outliers are not included, but at the end they can be classified as inliers again.
-	const float chi2Mono[4] = { 10.991, 10.991, 10.991, 10.991 };
+	const float chi2Mono[4] = { 3.991, 3.991, 3.991, 3.991 };
 	const int its[4] = { 10, 10, 10, 10 };
 
 	int nBad = 0;

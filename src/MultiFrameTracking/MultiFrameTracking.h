@@ -25,8 +25,9 @@ namespace ORB_SLAM2
 		std::vector<cv::Mat> mvrelative_pose_MulFrameToCameras;
 		std::vector<cv::Mat> mvrelative_pose_CamerasToMulFrame;
 		std::vector<FrameDrawer*> mvpFrameDrawer;
+		MapDrawer* mpMapDrawer;
 		cv::Mat mcamera_pose;
-
+		cv::Mat last_camera_pose;
 		std::vector<std::vector<Frame>> initialize_reference_frames;
 
 	public:
@@ -42,7 +43,7 @@ namespace ORB_SLAM2
 		eTrackingState mState;
 		eTrackingState mLastProcessedState;
 		int mnMatchesInliers;
-
+		bool create_new_keyframe;
 	public:
 		MultiFrameTracking(System* pSys, ORBVocabulary* pVoc, FrameDrawer* pFrameDrawer, MapDrawer* pMapDrawer, Map* pMap,
 			KeyFrameDatabase* pKFDB, const string &strSettingPath, const int sensor);
@@ -61,6 +62,8 @@ namespace ORB_SLAM2
 			bool TrackLocalMap();
 			bool TrackReferenceKeyFrame();
 			bool TrackWithMotionModel();
+			void CheckReplacedInLastFrame();
+			cv::Mat mVelocity;
 			public:
 				void SetLocalMapper(LocalMapping *pLocalMapper);
 			

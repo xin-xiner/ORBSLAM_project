@@ -665,7 +665,7 @@ namespace ORB_SLAM2
 				mCurrentFrame.mvpMapPoints[i] = static_cast<MapPoint*>(NULL);
 		}
 		mLastFrame = Frame(mCurrentFrame);
-
+		mpFrameDrawer->Update(this);
 		if (!mCurrentFrame.mpReferenceKF)
 			mCurrentFrame.mpReferenceKF = mpReferenceKF;
 
