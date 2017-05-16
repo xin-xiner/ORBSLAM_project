@@ -105,7 +105,7 @@ void MapPoint::AddObservation(KeyFrame* pKF, size_t idx)
     if(pKF->mvuRight[idx]>=0)
         nObs+=2;
     else
-        nObs+=4;//nObs++
+        nObs++;//nObs++
 
 }
 

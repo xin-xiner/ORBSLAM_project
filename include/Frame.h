@@ -57,6 +57,10 @@ public:
     // Constructor for Monocular cameras.
     Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth);
 
+	// Constructor for multiple Monocular cameras.
+	Frame(const std::vector<cv::Mat> &imGrays, const double &timeStamp, ORBextractor* extractor, ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, std::vector<cv::Mat>& Tcm);
+
+
     // Extract ORB on the image. 0 for left image and 1 for right image.
     void ExtractORB(int flag, const cv::Mat &im);
 
@@ -136,7 +140,8 @@ public:
     // In the RGB-D case, RGB images can be distorted.
     std::vector<cv::KeyPoint> mvKeys, mvKeysRight;
     std::vector<cv::KeyPoint> mvKeysUn;
-
+	std::vector<int> mvCamera_Id_KeysUn;//记录每个特征点来自于哪个相机
+	std::vector<cv::Mat> mvTcm;//记录每个相机的变化姿态
     // Corresponding stereo coordinate and depth for each keypoint.
     // "Monocular" keypoints have a negative value.
     std::vector<float> mvuRight;

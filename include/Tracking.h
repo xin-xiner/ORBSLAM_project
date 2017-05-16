@@ -62,6 +62,8 @@ public:
     cv::Mat GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const double &timestamp);
     cv::Mat GrabImageMonocular(const cv::Mat &im, const double &timestamp);
 	void GrabImageOnly(const cv::Mat &im, const double &timestamp);
+	cv::Mat GrabImageMultiCamera(const std::vector<cv::Mat> &ims, const double &timestamp);
+
 
     void SetLocalMapper(LocalMapping* pLocalMapper);
     void SetLoopClosing(LoopClosing* pLoopClosing);
@@ -231,6 +233,10 @@ protected:
 	vector<Tracking*> neighbor_traker;
 	int prepareForTrackMotionModel();
 	int prepareForTrackReference();
+
+	std::vector<cv::Mat> mvTmc;
+	std::vector<cv::Mat> mvTcm;
+	int mNcameras;
 };
 
 } //namespace ORB_SLAM

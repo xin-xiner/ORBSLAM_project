@@ -102,6 +102,30 @@ namespace ORB_SLAM2
 		cout << "- fps: " << fps << endl;
 
 
+		//Multi-Camera settings
+		mNcameras = fSettings["MultiCamera.n_frame"];
+		mvTmc.resize(mNcameras);
+		mvTcm.resize(mNcameras);
+		for (int i = 0; i < mNcameras; i++)
+		{
+			std::stringstream sst;
+			sst << "camera" << i;
+			std::vector<float> C;
+			std::vector<float> rot;
+			fSettings[(sst.str() + ".C")] >> C;
+			fSettings[(sst.str() + ".R")] >> rot;
+			cv::Mat R;
+			cv::Rodrigues(rot, R);
+
+			mvTcm[i] = cv::Mat::eye(4, 4, CV_32F);
+			R.copyTo(mvTcm[i](cv::Range(0, 3), cv::Range(0, 3)));
+			cv::Mat t = -R*cv::Mat(C);
+			t *= 0.1;
+			t.copyTo(mvTcm[i](cv::Range(0, 3), cv::Range(3, 4)));
+			mvTmc[i] = mvTcm[i].inv();
+		}
+
+
 		int nRGB = fSettings["Camera.RGB"];
 		mbRGB = nRGB;
 
@@ -265,6 +289,62 @@ namespace ORB_SLAM2
 
     		return mCurrentFrame.mTcw.clone();
 	}
+	void Montage(const std::vector<cv::Mat>& images, cv::Mat& montage, Frame& frame)
+	{
+		std::vector<cv::KeyPoint>& keys = frame.mvKeysUn;
+		std::vector<int>& ids = frame.mvCamera_Id_KeysUn;
+		int rows_of_image_group = images.size() / 2;
+		int width = images[0].cols;
+		int height = images[0].rows;
+		montage = cv::Mat(height*rows_of_image_group, width * 2, images[0].type());
+		std::vector<int> offset_x(images.size());
+		std::vector<int> offset_y(images.size());
+		for (int i = 0; i < rows_of_image_group; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				images[i * 2 + j].copyTo(montage(cv::Range(height*i, height*(i + 1)), cv::Range(width*j, width*(j + 1))));
+				offset_x[i * 2 + j] = width*j;
+				offset_y[i * 2 + j] = height*i;
+			}
+		}
+		for (int i = 0; i < keys.size(); i++)
+		{
+			int idx = ids[i];
+			keys[i].pt.x += offset_x[idx];
+			keys[i].pt.y += offset_y[idx];
+		}
+	}
+	cv::Mat Tracking::GrabImageMultiCamera(const std::vector<cv::Mat> &ims, const double &timestamp)
+	{
+		for (int i = 0; i < ims.size(); i++)
+		{
+			if (ims[i].channels() == 3)
+			{
+				if (mbRGB)
+					cvtColor(ims[i], ims[i], CV_RGB2GRAY);
+				else
+					cvtColor(ims[i], ims[i], CV_BGR2GRAY);
+			}
+			else if (ims[i].channels() == 4)
+			{
+				if (mbRGB)
+					cvtColor(ims[i], ims[i], CV_RGBA2GRAY);
+				else
+					cvtColor(ims[i], ims[i], CV_BGRA2GRAY);
+			}
+		}
+		if (mState == NOT_INITIALIZED || mState == NO_IMAGES_YET)
+			mCurrentFrame = Frame(ims, timestamp, mpIniORBextractor, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth, mvTcm);
+		else
+			mCurrentFrame = Frame(ims, timestamp, mpORBextractorLeft, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth, mvTcm);
+		
+		Montage(ims, mImGray, mCurrentFrame);
+		Track();
+
+		return mCurrentFrame.mTcw.clone();
+	}
+
 
 	void Tracking::GrabImageOnly(const cv::Mat &im, const double &timestamp)
 	{

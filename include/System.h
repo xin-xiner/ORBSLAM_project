@@ -56,7 +56,8 @@ public:
         MONOCULAR=0,
         STEREO=1,
         RGBD=2,
-		MULTIFRAME=3
+		MULTICAMERA=3,
+		MULTIFRAME=4,
     };
 
 public:
@@ -80,7 +81,8 @@ public:
     // Returns the camera pose (empty if tracking fails).
     cv::Mat TrackMonocular(const cv::Mat &im, const double &timestamp);
 
-
+	cv::Mat TrackMultiCamera(const std::vector<cv::Mat>& ims, const double &timestamp);
+	
 	cv::Mat TrackMultiFrame(const std::vector<cv::Mat>& ims, const double &timestamp);
 	MultiFrameTracking* mpmulti_frame_tracker;
 
